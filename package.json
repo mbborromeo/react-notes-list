@@ -1,6 +1,6 @@
 {
-  "name": "react-to-do-list",
-  "homepage": "http://mbborromeo.github.io/react-to-do-list",
+  "name": "react-notes-list",
+  "homepage": "http://mbborromeo.github.io/react-notes-list",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
