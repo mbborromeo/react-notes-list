@@ -68,11 +68,12 @@ function List() {
   );
 
   const addToDo = useCallback(
-    (text) => {
+    (text, priority) => {
       const newListItem = {
         id: getMaxID() + 1,
         completed: false,
-        title: text
+        content: text,
+        priority: priority
       };
 
       const newList = [...list, newListItem]; // add new item to end of list
@@ -84,7 +85,7 @@ function List() {
   /*
     const editToDo = (index, text) => {
         const copyOfList = [...list];
-        copyOfList[index].title = text;
+        copyOfList[index].content = text;
         setList(copyOfList);
     };
     */
@@ -216,7 +217,7 @@ function List() {
                   className={sortConfig.key === 'title' ? sortConfig.direction : ''}
                   onClick={() => requestSort('title')}
                 > */}
-                  Title
+                  Note
                 {/* </button> */}
               </th>
               <th>
@@ -252,7 +253,7 @@ function List() {
                       data-id={item.id}
                       className={item.completed ? 'completed' : ''}
                     >
-                      { item.title }
+                      { item.content }
                     </Link>
                   </td>
                   <td>
