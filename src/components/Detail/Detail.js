@@ -2,21 +2,25 @@ import React, {
   useState, useEffect, useMemo //, useCallback
 } from 'react';
 import { Link } from 'react-router-dom';
-import DataService from '../../services/DataService';
+//import DataService from '../../services/DataService';
 import '../../App.css';
 
 function Detail({ match }) {  
+  const [list, setList] = useState( [] );
   const [detail, setDetail] = useState({});
   const [loaded, setLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  //const [hasError, setHasError] = useState(false);
   const detailID = match.params.id;
 
   // save a memoized copy of the function for re-use instead of creating a new function each time
+  /*
   const dataService = useMemo(
     () => new DataService(),
     []
   );
+  */
 
+  /*
   useEffect(() => {
     if (detailID) {
       dataService.getDetail(detailID)
@@ -37,28 +41,41 @@ function Detail({ match }) {
     }
   },
   [dataService, detailID]);
+  */
+  useEffect(() => {
+    const localList = JSON.parse( localStorage.getItem('localList') );
+    console.log('localStorage getItem localList', localStorage.getItem('localList') )
+    console.log('useEffect localList', localList)
 
-  if (loaded && Object.keys(detail).length > 0) {
+    if (localList) {
+      setList( localList );
+      //setDetail( localList[detailID] ); //.detailID
+      setLoaded(true);
+    }
+  }, []); //detailID
+
+
+  if (loaded && list.length > 0) { //Object.keys(detail).length
     return (
       <div>
+        <h3>Note</h3>
+
+        <span id="note">
+          { list[detailID-1].content }
+        </span>
+        <br /><br />
+        
         <span id="id">
           ID:
           {' '}
           { detailID }
         </span>
-        <br />
-
-        <span id="title">
-          Title:
-          {' '}
-          { detail.title }
-        </span>
-        <br />
+        <br /><br />
         
         <span id="completed">
-          Completed:
+          Priority:
           {' '}
-          { detail.completed.toString() }
+          { list[detailID-1].priority }
         </span>
 
         <br />
@@ -71,11 +88,12 @@ function Detail({ match }) {
         </Link>
       </div>
     );
-  } if (loaded && Object.keys(detail).length === 0) {
+  } if (loaded && list.length === 0) { // Object.keys(detail).length
     return <div>No detail to display</div>;
-  } if (hasError) {
+  } /*if (hasError) {
     return <div>Error loading</div>;
   }
+  */
   return <div>Loading...</div>;
 }
 
