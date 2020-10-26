@@ -8,6 +8,11 @@ I assume free-text notes can be multiple lines during input, so am attempting to
 
 Local Storage is on web-browser.
 
+## To Do
+Fix CSS for Homepage so long notes are truncated with elipsis.
+
+Setup Eslint for code consistency and checking React-Hooks rules.
+
 ## Available Scripts
 
 In the project directory, you can run:
