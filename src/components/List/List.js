@@ -68,11 +68,12 @@ function List() {
   );
 
   const addToDo = useCallback(
-    (text) => {
+    (text, priority) => {
       const newListItem = {
         id: getMaxID() + 1,
         completed: false,
-        title: text
+        content: text,
+        priority: priority
       };
 
       const newList = [...list, newListItem]; // add new item to end of list
@@ -84,7 +85,7 @@ function List() {
   /*
     const editToDo = (index, text) => {
         const copyOfList = [...list];
-        copyOfList[index].title = text;
+        copyOfList[index].content = text;
         setList(copyOfList);
     };
     */
@@ -185,10 +186,7 @@ function List() {
   // possibly use useMemo here, and/or define a function for sort
   // if (sortedResults) {
   //   if (sortedResults.length > 0) {
-  if (list) {    
-    console.log("list.length", list.length)
-    console.log("list", list)
-    console.log("typeof list", typeof list)
+  if (list) { 
     // render DOM
     return (
       <div>
@@ -196,28 +194,21 @@ function List() {
           <h1>Notes List</h1>
           <AddForm addFunction={addToDo} />
         </div>
-
-        { list.length > 0 &&
+        
         <table>
           <thead>
             <tr>
               <th>
                 {/* <button
                   type="button"
-                  className={sortConfig.key === 'id' ? sortConfig.direction : ''}
-                  onClick={() => requestSort('id')}
-                > */}
-                  ID
-                {/* </button> */}
-              </th>
-              <th>
-                {/* <button
-                  type="button"
                   className={sortConfig.key === 'title' ? sortConfig.direction : ''}
                   onClick={() => requestSort('title')}
                 > */}
-                  Title
+                  Note
                 {/* </button> */}
+              </th>
+              <th>
+                Priority
               </th>
               <th>
                 {/* <button
@@ -226,12 +217,13 @@ function List() {
                   className={sortConfig.key === 'completed' ? sortConfig.direction : ''}
                   onClick={() => requestSort('completed')}
                 > */}
-                  Completed
+                  Actions
                 {/* </button> */}
               </th>
             </tr>
           </thead>
 
+          { list.length > 0 &&
           <tbody>
             {
               // sortedResults.map((item) => (
@@ -243,17 +235,11 @@ function List() {
                       data-id={item.id}
                       className={item.completed ? 'completed' : ''}
                     >
-                      { item.id }
+                      { item.content }
                     </Link>
                   </td>
                   <td>
-                    <Link
-                      to={`/detail/${item.id}`}
-                      data-id={item.id}
-                      className={item.completed ? 'completed' : ''}
-                    >
-                      { item.title }
-                    </Link>
+                    { item.priority }
                   </td>
                   <td>
                     <button type="button" 
@@ -268,8 +254,8 @@ function List() {
               ))
             }
           </tbody>
+          }
         </table>
-        } 
 
         { list.length === 0 &&
           <div>No results to display</div>

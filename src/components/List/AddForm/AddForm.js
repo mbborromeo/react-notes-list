@@ -2,31 +2,24 @@ import React, { useState, useCallback } from 'react';
 
 function AddForm({ addFunction }) {
   const [newItem, setNewItem] = useState('');
+  const [itemPriority, setItemPriority] = useState('');
 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
 
-      if (!newItem) {
+      if (!newItem || !itemPriority ) {        
+        alert('Note must not be empty and priority must be selected')
         return; // exit if field empty
       }
-
-      addFunction(newItem);
-      setNewItem(''); // reset field to empty
+      
+      addFunction(newItem, itemPriority);
+      // reset field to empty
+      setNewItem('');
+      setItemPriority('');
     },
-    [newItem, addFunction]
+    [newItem, itemPriority, addFunction]
   );
-
-  /*
-  const handleBlur = (e) => {
-        // click on Submit/Add button
-        if( e.target ... ){
-            e.preventDefault();
-        } else {
-            setNewItem('')
-        }
-  };
-  */
 
   return (
     <form onSubmit={handleSubmit}>
@@ -41,11 +34,30 @@ function AddForm({ addFunction }) {
         onChange={(e) => setNewItem(e.target.value)}
       />
       <br />
+
+      <select 
+        name="priority" 
+        id="priority" 
+        value={ itemPriority }
+        onChange={(e) => setItemPriority(e.target.value) }
+      >
+        <option value="" disabled hidden>Select priority</option>
+        <option value="high">High</option>
+        <option value="normal">Normal</option>
+        <option value="low">Low</option>
+      </select>
+      &nbsp;&nbsp;
+
       <button type="submit">Add</button>
+      &nbsp;
+
       <input
         type="button"
         value="Clear"
-        onClick={() => setNewItem('')}
+        onClick={() => {
+          setNewItem('');
+          setItemPriority('');
+        }}
       />
     </form>
   );
