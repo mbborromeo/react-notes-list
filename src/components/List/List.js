@@ -10,7 +10,7 @@ function List() {
   const [list, setList] = useState(
     //localStorage.getItem('localList') || 
     []
-  ); // undefined
+  );
 
   //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
   //const [hasError, setHasError] = useState(false);
@@ -73,7 +73,6 @@ function List() {
   const addToDo = useCallback(
     (text) => {
       const newListItem = {
-        userId: 99, // default user
         id: getMaxID() + 1,
         completed: false,
         title: text
