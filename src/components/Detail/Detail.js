@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useMemo, useCallback
+  useState, useEffect, useMemo //, useCallback
 } from 'react';
 import { Link } from 'react-router-dom';
 import DataService from '../../services/DataService';
