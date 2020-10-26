@@ -186,10 +186,7 @@ function List() {
   // possibly use useMemo here, and/or define a function for sort
   // if (sortedResults) {
   //   if (sortedResults.length > 0) {
-  if (list) {    
-    console.log("list.length", list.length)
-    console.log("list", list)
-    console.log("typeof list", typeof list)
+  if (list) { 
     // render DOM
     return (
       <div>
@@ -197,8 +194,7 @@ function List() {
           <h1>Notes List</h1>
           <AddForm addFunction={addToDo} />
         </div>
-
-        { list.length > 0 &&
+        
         <table>
           <thead>
             <tr>
@@ -233,6 +229,7 @@ function List() {
             </tr>
           </thead>
 
+          { list.length > 0 &&
           <tbody>
             {
               // sortedResults.map((item) => (
@@ -269,8 +266,8 @@ function List() {
               ))
             }
           </tbody>
+          }
         </table>
-        } 
 
         { list.length === 0 &&
           <div>No results to display</div>
