@@ -1,21 +1,27 @@
 import React, {
-  useState, useEffect, useMemo, useCallback
+  useState, useEffect, useCallback //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-import DataService from '../../services/DataService';
+//import DataService from '../../services/DataService';
 import AddForm from './AddForm/AddForm';
 import './List.css';
 
 function List() {
-  const [list, setList] = useState(undefined); // []
-  const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
-  const [hasError, setHasError] = useState(false);
+  const [list, setList] = useState(
+    //localStorage.getItem('localList') || 
+    []
+  ); // undefined
+
+  //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
+  //const [hasError, setHasError] = useState(false);
 
   // save a memoized copy of the function for re-use instead of creating a new function each time
+  /*
   const dataService = useMemo(
     () => new DataService(),
     []
   );
+  */
 
   const getArrayIndexOfItem = useCallback(
     (id) => {
@@ -44,15 +50,14 @@ function List() {
 
   const deleteToDo = useCallback(
     (id) => {
-      const indexOfItem = getArrayIndexOfItem(id);
-
+      //const indexOfItem = getArrayIndexOfItem(id);
       // const copyOfList = [...list];
       // copyOfList.splice(indexOfItem, 1);
       const filteredList = list.filter((elem) => elem.id !== id);
 
       setList(filteredList); // copyOfList
     },
-    [list, getArrayIndexOfItem] // dependencies that require a re-render for
+    [list] // dependencies that require a re-render for //, getArrayIndexOfItem
   );
 
   // Reference: https://www.danvega.dev/blog/2019/03/14/find-max-array-objects-javascript
@@ -60,7 +65,7 @@ function List() {
     () => {
       const ids = list.map((item) => item.id);
       const sorted = ids.sort((a, b) => a - b); // sort ascending order
-      return sorted[sorted.length - 1];
+      return sorted[sorted.length - 1] || 0; // find max ID, else start at 1 (0)
     },
     [list]
   );
@@ -89,6 +94,7 @@ function List() {
     */
 
   // Reference: https://www.smashingmagazine.com/2020/03/sortable-tables-react/
+  /*
   const requestSort = useCallback(
     (key) => {
       let direction;
@@ -104,8 +110,10 @@ function List() {
       setSortConfig({ key, direction });
     },
     [sortConfig] // dependencies that require a re-render for
-  );
+  );  
+  */
 
+  /*
   useEffect(() => {
     dataService.getList()
       .then((response) => {
@@ -122,8 +130,27 @@ function List() {
       });
   },
   [dataService]);
+  */
+  // empty array dependency so effect only runs once initially
+  useEffect(() => {
+    console.log( 'localStorage getItem localList', localStorage.getItem('localList') )
+
+    const localList = JSON.parse( localStorage.getItem('localList') );
+    console.log('useEffect localList', localList)
+
+    if (localList) {
+      setList( localList );
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log('useEffect list changed', list)
+    localStorage.setItem( 'localList', JSON.stringify( list ) );
+    console.log( 'localStorage getItem localList', localStorage.getItem('localList') )
+  }, [list]);
 
   // sort list
+  /*
   const sortedResults = useMemo(
     () => {
       if (list) {
@@ -160,95 +187,106 @@ function List() {
     },
     [list, sortConfig]
   );
+  */
   
   // possibly use useMemo here, and/or define a function for sort
-  if (sortedResults) {
-    if (sortedResults.length > 0) {
-      // render DOM
-      return (
-        <div>
-          <div id="header">
-            <h1>TO DO</h1>
-            <AddForm addFunction={addToDo} />
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>
-                  <button
-                    type="button"
-                    className={sortConfig.key === 'id' ? sortConfig.direction : ''}
-                    onClick={() => requestSort('id')}
-                  >
-                    ID
-                  </button>
-                </th>
-                <th>
-                  <button
-                    type="button"
-                    className={sortConfig.key === 'title' ? sortConfig.direction : ''}
-                    onClick={() => requestSort('title')}
-                  >
-                    Title
-                  </button>
-                </th>
-                <th>
-                  <button
-                    type="button"
-                    id="completed"
-                    className={sortConfig.key === 'completed' ? sortConfig.direction : ''}
-                    onClick={() => requestSort('completed')}
-                  >
-                    Completed
-                  </button>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {
-                sortedResults.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <Link
-                        to={`/detail/${item.id}`}
-                        data-id={item.id}
-                        className={item.completed ? 'completed' : ''}
-                      >
-                        { item.id }
-                      </Link>
-                    </td>
-                    <td>
-                      <Link
-                        to={`/detail/${item.id}`}
-                        data-id={item.id}
-                        className={item.completed ? 'completed' : ''}
-                      >
-                        { item.title }
-                      </Link>
-                    </td>
-                    <td>
-                      <button type="button" 
-                        onClick={() => completeToDo(item.id)}
-                        className={item.completed ? 'strikethrough' : ''}
-                      >
-                        {item.completed ? 'To Do' : 'Done'}
-                      </button>
-                      <button type="button" aria-label={`Delete item ${item.id}`} onClick={() => deleteToDo(item.id)}>X</button>
-                    </td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
+  // if (sortedResults) {
+  //   if (sortedResults.length > 0) {
+  if (list) {    
+    console.log("list.length", list.length)
+    console.log("list", list)
+    console.log("typeof list", typeof list)
+    // render DOM
+    return (
+      <div>
+        <div id="header">
+          <h1>TO DO</h1>
+          <AddForm addFunction={addToDo} />
         </div>
-      );
-    }
-    return <div>No results to display</div>;
-  }
-  if (hasError) { // finished loading, but has error
-    return <div>Error loading</div>;
-  }
+
+        { list.length > 0 &&
+        <table>
+          <thead>
+            <tr>
+              <th>
+                {/* <button
+                  type="button"
+                  className={sortConfig.key === 'id' ? sortConfig.direction : ''}
+                  onClick={() => requestSort('id')}
+                > */}
+                  ID
+                {/* </button> */}
+              </th>
+              <th>
+                {/* <button
+                  type="button"
+                  className={sortConfig.key === 'title' ? sortConfig.direction : ''}
+                  onClick={() => requestSort('title')}
+                > */}
+                  Title
+                {/* </button> */}
+              </th>
+              <th>
+                {/* <button
+                  type="button"
+                  id="completed"
+                  className={sortConfig.key === 'completed' ? sortConfig.direction : ''}
+                  onClick={() => requestSort('completed')}
+                > */}
+                  Completed
+                {/* </button> */}
+              </th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {
+              // sortedResults.map((item) => (
+              list.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <Link
+                      to={`/detail/${item.id}`}
+                      data-id={item.id}
+                      className={item.completed ? 'completed' : ''}
+                    >
+                      { item.id }
+                    </Link>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/detail/${item.id}`}
+                      data-id={item.id}
+                      className={item.completed ? 'completed' : ''}
+                    >
+                      { item.title }
+                    </Link>
+                  </td>
+                  <td>
+                    <button type="button" 
+                      onClick={() => completeToDo(item.id)}
+                      className={item.completed ? 'strikethrough' : ''}
+                    >
+                      {item.completed ? 'To Do' : 'Done'}
+                    </button>
+                    <button type="button" aria-label={`Delete item ${item.id}`} onClick={() => deleteToDo(item.id)}>X</button>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+        } 
+
+        { list.length === 0 &&
+          <div>No results to display</div>
+        }
+      </div>
+    );
+  }  
+  // if (hasError) { // finished loading, but has error
+  //   return <div>Error loading</div>;
+  // }
   return <div>Loading...</div>;
 }
 
