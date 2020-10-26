@@ -201,20 +201,14 @@ function List() {
               <th>
                 {/* <button
                   type="button"
-                  className={sortConfig.key === 'id' ? sortConfig.direction : ''}
-                  onClick={() => requestSort('id')}
-                > */}
-                  ID
-                {/* </button> */}
-              </th>
-              <th>
-                {/* <button
-                  type="button"
                   className={sortConfig.key === 'title' ? sortConfig.direction : ''}
                   onClick={() => requestSort('title')}
                 > */}
                   Note
                 {/* </button> */}
+              </th>
+              <th>
+                Priority
               </th>
               <th>
                 {/* <button
@@ -223,7 +217,7 @@ function List() {
                   className={sortConfig.key === 'completed' ? sortConfig.direction : ''}
                   onClick={() => requestSort('completed')}
                 > */}
-                  Completed
+                  Actions
                 {/* </button> */}
               </th>
             </tr>
@@ -241,17 +235,11 @@ function List() {
                       data-id={item.id}
                       className={item.completed ? 'completed' : ''}
                     >
-                      { item.id }
+                      { item.content }
                     </Link>
                   </td>
                   <td>
-                    <Link
-                      to={`/detail/${item.id}`}
-                      data-id={item.id}
-                      className={item.completed ? 'completed' : ''}
-                    >
-                      { item.content }
-                    </Link>
+                    { item.priority }
                   </td>
                   <td>
                     <button type="button" 
