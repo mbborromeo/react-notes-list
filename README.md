@@ -9,9 +9,9 @@ I assume free-text notes can be multiple lines during input, so am attempting to
 Local Storage is on web-browser.
 
 ## To Do
-Fix CSS for Homepage so long notes are truncated with elipsis.
-
-Setup Eslint for code consistency and checking React-Hooks rules.
+- Fix CSS for Homepage so long notes are truncated with elipsis
+- Setup Eslint for code consistency and checking React-Hooks rules
+- Break AddForm into smaller re-usable components for select dropdown and textarea
 
 ## Available Scripts
 
