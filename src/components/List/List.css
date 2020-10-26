@@ -26,8 +26,25 @@ table {
     /*position: relative;*/ /* needed for position sticky on child */
 }
 
+table tbody tr td {
+    margin-bottom: 1em;
+}
+
 table tbody tr td a {
     text-decoration: none;
+}
+
+table tbody tr td.content {
+    /* white-space: pre-wrap; */
+    display: block;
+    width: 75%;
+    height: 40px;
+    /* white-space: nowrap; */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+span#note {
     white-space: pre-wrap;
 }
 
@@ -80,14 +97,6 @@ thead button.descending::after {
 thead button#completed {
     min-width: 105px;
     text-align: left;
-}
-
-thead button#completed.ascending::after {
-    content: 'Y';
-}
-
-thead button#completed.descending::after {
-    content: 'N';
 }
 
 thead button.ascending::after,

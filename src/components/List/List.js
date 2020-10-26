@@ -152,7 +152,7 @@ function List() {
             {
               filteredResults.map((item) => (
                 <tr key={item.id}>
-                  <td>
+                  <td className="content">
                     <Link
                       to={`/detail/${item.id}`}
                       data-id={item.id}
