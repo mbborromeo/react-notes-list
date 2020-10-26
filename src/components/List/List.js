@@ -7,10 +7,7 @@ import AddForm from './AddForm/AddForm';
 import './List.css';
 
 function List() {
-  const [list, setList] = useState(
-    //localStorage.getItem('localList') || 
-    []
-  );
+  const [list, setList] = useState( [] );
 
   //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
   //const [hasError, setHasError] = useState(false);
@@ -130,12 +127,10 @@ function List() {
   },
   [dataService]);
   */
+
   // empty array dependency so effect only runs once initially
   useEffect(() => {
-    console.log( 'localStorage getItem localList', localStorage.getItem('localList') )
-
     const localList = JSON.parse( localStorage.getItem('localList') );
-    console.log('useEffect localList', localList)
 
     if (localList) {
       setList( localList );
@@ -143,9 +138,7 @@ function List() {
   }, []);
 
   useEffect(() => {
-    console.log('useEffect list changed', list)
     localStorage.setItem( 'localList', JSON.stringify( list ) );
-    console.log( 'localStorage getItem localList', localStorage.getItem('localList') )
   }, [list]);
 
   // sort list
