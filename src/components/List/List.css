@@ -45,6 +45,10 @@ table thead tr th {
     padding-bottom: 10px;
 }
 
+table thead tr th.width-quarter {
+    width: 25%;
+}
+
 table thead tr th:first-child button {
     min-width: 53px;
 }
