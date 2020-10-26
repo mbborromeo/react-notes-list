@@ -20,6 +20,7 @@ function List() {
   );
 
   // Reference: https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks
+  /*
   const completeToDo = useCallback(
     (id) => {
       const indexOfItem = getArrayIndexOfItem(id);
@@ -35,6 +36,13 @@ function List() {
     },
     [list, getArrayIndexOfItem] // dependencies that require a re-render for
   );
+  */
+  const editToDo = (index, text) => {
+    console.log('editToDo')
+    // const copyOfList = [...list];
+    // copyOfList[index].content = text;
+    // setList(copyOfList);
+  };
 
   const deleteToDo = useCallback(
     (id) => {
@@ -58,7 +66,6 @@ function List() {
     (text, priority) => {
       const newListItem = {
         id: getMaxID() + 1,
-        completed: false,
         content: text,
         priority: priority
       };
@@ -67,15 +74,7 @@ function List() {
       setList(newList);
     },
     [list, getMaxID]
-  );
-
-  /*
-  const editToDo = (index, text) => {
-      const copyOfList = [...list];
-      copyOfList[index].content = text;
-      setList(copyOfList);
-  };
-  */
+  );  
 
   const requestFilter = useCallback(
     (key) => {
@@ -156,7 +155,6 @@ function List() {
                     <Link
                       to={`/detail/${item.id}`}
                       data-id={item.id}
-                      className={item.completed ? 'completed' : ''}
                     >
                       { item.content }
                     </Link>
@@ -166,10 +164,9 @@ function List() {
                   </td>
                   <td>
                     <button type="button" 
-                      onClick={() => completeToDo(item.id)}
-                      className={item.completed ? 'strikethrough' : ''}
+                      onClick={() => editToDo(item.id)}
                     >
-                      {item.completed ? 'To Do' : 'Done'}
+                      Edit
                     </button>
                     <button type="button" aria-label={`Delete item ${item.id}`} onClick={() => deleteToDo(item.id)}>X</button>
                   </td>

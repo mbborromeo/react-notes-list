@@ -44,8 +44,6 @@ function Detail({ match }) {
   */
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
-    console.log('localStorage getItem localList', localStorage.getItem('localList') )
-    console.log('useEffect localList', localList)
 
     if (localList) {
       setList( localList );
