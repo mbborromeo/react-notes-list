@@ -30,12 +30,17 @@ function AddForm({ addFunction }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
+      <textarea 
+        id="note" 
+        name="note" 
+        rows="4" 
+        cols="40"
         type="text"
-        placeholder="Type item"
+        placeholder="Type note"
         value={newItem}
         onChange={(e) => setNewItem(e.target.value)}
       />
+      <br />
       <button type="submit">Add</button>
       <input
         type="button"

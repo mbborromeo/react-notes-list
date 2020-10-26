@@ -128,6 +128,7 @@ function List() {
   [dataService]);
   */
 
+  // Reference: https://dev.to/saranshk/react-hooks-and-local-storage-let-s-build-a-todo-app-39g3
   // empty array dependency so effect only runs once initially
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
@@ -192,7 +193,7 @@ function List() {
     return (
       <div>
         <div id="header">
-          <h1>TO DO</h1>
+          <h1>Notes List</h1>
           <AddForm addFunction={addToDo} />
         </div>
 

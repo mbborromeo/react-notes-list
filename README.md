@@ -3,6 +3,11 @@ React notes list with priority categorization and local storage.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Assumptions
+I assume free-text notes can be multiple lines during input, but when saved do not keep track of linebreaks or formatting.
+
+Local Storage is on web-browser.
+
 ## Available Scripts
 
 In the project directory, you can run:

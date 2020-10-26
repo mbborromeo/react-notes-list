@@ -1,8 +1,9 @@
 #header {
+    /*
     position: sticky;
     top: 0;
     z-index: 10;
-
+    */
     padding: 15px 0;
     background-color: #FFF;
 }
@@ -22,7 +23,7 @@ th, td {
 }
 
 table {
-    position: relative; /* needed for position sticky on child */
+    /*position: relative;*/ /* needed for position sticky on child */
 }
 
 table tbody tr td a {
@@ -34,10 +35,11 @@ table tbody tr td a:hover {
 }
 
 table thead tr th {
+    /*
     position: sticky;
     top: 115px;
     z-index: 10;
-
+    */
     background-color: #FFF;
     padding-bottom: 10px;
 }
