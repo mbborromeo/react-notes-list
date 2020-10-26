@@ -2,23 +2,14 @@ import React, {
   useState, useEffect, useCallback, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-//import DataService from '../../services/DataService';
 import AddForm from './AddForm/AddForm';
 import './List.css';
 
 function List() {
   const [list, setList] = useState( [] );
-  //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
   const [filterConfig, setFilterConfig] = useState({ key: 'all' });
+  //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });  
   //const [hasError, setHasError] = useState(false);
-
-  // save a memoized copy of the function for re-use instead of creating a new function each time
-  /*
-  const dataService = useMemo(
-    () => new DataService(),
-    []
-  );
-  */
 
   const getArrayIndexOfItem = useCallback(
     (id) => {
@@ -47,11 +38,7 @@ function List() {
 
   const deleteToDo = useCallback(
     (id) => {
-      //const indexOfItem = getArrayIndexOfItem(id);
-      // const copyOfList = [...list];
-      // copyOfList.splice(indexOfItem, 1);
       const filteredList = list.filter((elem) => elem.id !== id);
-
       setList(filteredList); // copyOfList
     },
     [list] // dependencies that require a re-render for //, getArrayIndexOfItem
@@ -83,32 +70,13 @@ function List() {
   );
 
   /*
-    const editToDo = (index, text) => {
-        const copyOfList = [...list];
-        copyOfList[index].content = text;
-        setList(copyOfList);
-    };
-    */
-
-  // Reference: https://www.smashingmagazine.com/2020/03/sortable-tables-react/
-  /*
-  const requestSort = useCallback(
-    (key) => {
-      let direction;
-
-      // if requested key is same as current key
-      if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-        direction = 'descending';
-      } else {
-        direction = 'ascending'; // by default
-      }
-
-      // set to new key and direction
-      setSortConfig({ key, direction });
-    },
-    [sortConfig] // dependencies that require a re-render for
-  );  
+  const editToDo = (index, text) => {
+      const copyOfList = [...list];
+      copyOfList[index].content = text;
+      setList(copyOfList);
+  };
   */
+
   const requestFilter = useCallback(
     (key) => {
       // set to new key (and direction)
@@ -116,25 +84,6 @@ function List() {
     },
     [filterConfig] // dependencies that require a re-render for
   ); 
-
-  /*
-  useEffect(() => {
-    dataService.getList()
-      .then((response) => {
-        // handle success
-        setList(response);
-      })
-      .catch((error) => {
-        // handle error
-        console.error('axios.jsonp CATCH', error);
-        setHasError(true);
-      })
-      .finally(() => {
-        // always executed
-      });
-  },
-  [dataService]);
-  */
 
   // Reference: https://dev.to/saranshk/react-hooks-and-local-storage-let-s-build-a-todo-app-39g3
   // empty array dependency so effect only runs once initially
@@ -153,8 +102,6 @@ function List() {
   const filteredResults = useMemo(
     () => {
       if (list) {
-        //const filteredList = [...list];
-
         if( filterConfig.key==="all" ){
           return list
         } else {
