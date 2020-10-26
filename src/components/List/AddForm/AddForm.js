@@ -35,7 +35,7 @@ function AddForm({ addFunction }) {
         name="note" 
         rows="4" 
         cols="40"
-        type="text"
+        wrap="hard"
         placeholder="Type note"
         value={newItem}
         onChange={(e) => setNewItem(e.target.value)}
