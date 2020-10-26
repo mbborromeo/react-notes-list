@@ -1,24 +1,15 @@
 import React, {
-  useState, useEffect, useCallback //, useMemo
+  useState, useEffect, useCallback, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-//import DataService from '../../services/DataService';
 import AddForm from './AddForm/AddForm';
 import './List.css';
 
 function List() {
   const [list, setList] = useState( [] );
-
-  //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });
+  const [filterConfig, setFilterConfig] = useState({ key: 'all' });
+  //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });  
   //const [hasError, setHasError] = useState(false);
-
-  // save a memoized copy of the function for re-use instead of creating a new function each time
-  /*
-  const dataService = useMemo(
-    () => new DataService(),
-    []
-  );
-  */
 
   const getArrayIndexOfItem = useCallback(
     (id) => {
@@ -47,11 +38,7 @@ function List() {
 
   const deleteToDo = useCallback(
     (id) => {
-      //const indexOfItem = getArrayIndexOfItem(id);
-      // const copyOfList = [...list];
-      // copyOfList.splice(indexOfItem, 1);
       const filteredList = list.filter((elem) => elem.id !== id);
-
       setList(filteredList); // copyOfList
     },
     [list] // dependencies that require a re-render for //, getArrayIndexOfItem
@@ -83,51 +70,20 @@ function List() {
   );
 
   /*
-    const editToDo = (index, text) => {
-        const copyOfList = [...list];
-        copyOfList[index].content = text;
-        setList(copyOfList);
-    };
-    */
+  const editToDo = (index, text) => {
+      const copyOfList = [...list];
+      copyOfList[index].content = text;
+      setList(copyOfList);
+  };
+  */
 
-  // Reference: https://www.smashingmagazine.com/2020/03/sortable-tables-react/
-  /*
-  const requestSort = useCallback(
+  const requestFilter = useCallback(
     (key) => {
-      let direction;
-
-      // if requested key is same as current key
-      if (sortConfig.key === key && sortConfig.direction === 'ascending') {
-        direction = 'descending';
-      } else {
-        direction = 'ascending'; // by default
-      }
-
-      // set to new key and direction
-      setSortConfig({ key, direction });
+      // set to new key (and direction)
+      setFilterConfig({ key });
     },
-    [sortConfig] // dependencies that require a re-render for
-  );  
-  */
-
-  /*
-  useEffect(() => {
-    dataService.getList()
-      .then((response) => {
-        // handle success
-        setList(response);
-      })
-      .catch((error) => {
-        // handle error
-        console.error('axios.jsonp CATCH', error);
-        setHasError(true);
-      })
-      .finally(() => {
-        // always executed
-      });
-  },
-  [dataService]);
-  */
+    [filterConfig] // dependencies that require a re-render for
+  ); 
 
   // Reference: https://dev.to/saranshk/react-hooks-and-local-storage-let-s-build-a-todo-app-39g3
   // empty array dependency so effect only runs once initially
@@ -143,51 +99,23 @@ function List() {
     localStorage.setItem( 'localList', JSON.stringify( list ) );
   }, [list]);
 
-  // sort list
-  /*
-  const sortedResults = useMemo(
+  const filteredResults = useMemo(
     () => {
       if (list) {
-        const sortedList = [...list];
-
-        sortedList.sort((a, b) => {
-          if (a[sortConfig.key] < b[sortConfig.key]) {
-            if (sortConfig.key === 'completed') { // completed has reversed order
-              return sortConfig.direction === 'ascending' ? 1 : -1;
-            }
-            return sortConfig.direction === 'ascending' ? -1 : 1;
-          }
-          if (a[sortConfig.key] > b[sortConfig.key]) {
-            if (sortConfig.key === 'completed') { // completed has reversed order
-              return sortConfig.direction === 'ascending' ? -1 : 1;
-            }
-            return sortConfig.direction === 'ascending' ? 1 : -1;
-          }
-
-          // then sort by ID as well
-          if (a.id < b.id) {
-            return -1;
-          }
-          if (a.id > b.id) {
-            return 1;
-          }
-
-          return 0;
-        });
-
-        return sortedList;
+        if( filterConfig.key==="all" ){
+          return list
+        } else {
+          const filteredList = list.filter( (note) => note.priority===filterConfig.key );
+          return filteredList;
+        }        
       }
       return undefined;
     },
-    [list, sortConfig]
+    [list, filterConfig]
   );
-  */
   
   // possibly use useMemo here, and/or define a function for sort
-  // if (sortedResults) {
-  //   if (sortedResults.length > 0) {
-  if (list) { 
-    // render DOM
+  if (filteredResults) {
     return (
       <div>
         <div id="header">
@@ -199,35 +127,30 @@ function List() {
           <thead>
             <tr>
               <th>
-                {/* <button
-                  type="button"
-                  className={sortConfig.key === 'title' ? sortConfig.direction : ''}
-                  onClick={() => requestSort('title')}
-                > */}
-                  Note
-                {/* </button> */}
+                Note
               </th>
-              <th>
-                Priority
+              <th className="width-quarter">
+                Priority&nbsp;
+                <select 
+                  value={ filterConfig.key }
+                  onChange={ (e) => requestFilter(e.target.value) }
+                >
+                  <option value="all">ALL</option>
+                  <option value="high">High</option>
+                  <option value="normal">Normal</option>
+                  <option value="low">Low</option>
+                </select>
               </th>
-              <th>
-                {/* <button
-                  type="button"
-                  id="completed"
-                  className={sortConfig.key === 'completed' ? sortConfig.direction : ''}
-                  onClick={() => requestSort('completed')}
-                > */}
-                  Actions
-                {/* </button> */}
+              <th className="width-quarter">
+                Actions                
               </th>
             </tr>
-          </thead>
-
-          { list.length > 0 &&
+          </thead>                
+          
+          { filteredResults.length > 0 && 
           <tbody>
             {
-              // sortedResults.map((item) => (
-              list.map((item) => (
+              filteredResults.map((item) => (
                 <tr key={item.id}>
                   <td>
                     <Link
@@ -262,10 +185,7 @@ function List() {
         }
       </div>
     );
-  }  
-  // if (hasError) { // finished loading, but has error
-  //   return <div>Error loading</div>;
-  // }
+  }
   return <div>Loading...</div>;
 }
 
