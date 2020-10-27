@@ -3,6 +3,7 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import AddForm from './AddForm/AddForm';
+import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 import './List.css';
 
 // Reference: https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks
@@ -86,6 +87,13 @@ function List() {
     },
     [list, filterConfig]
   );
+
+  const handleSelectOnChange = useCallback(
+    (e) => {
+      setFilterConfig(e.target.value)
+    },
+    []
+  );
   
   // possibly use useMemo here, and/or define a function for sort
   if (filteredResults) {
@@ -105,15 +113,7 @@ function List() {
               <th className="width-quarter">
                 Priority&nbsp;
                 
-                <select 
-                  value={ filterConfig }
-                  onChange={ (e) => setFilterConfig(e.target.value) }
-                >
-                  <option value="all">ALL</option>
-                  <option value="high">High</option>
-                  <option value="normal">Normal</option>
-                  <option value="low">Low</option>
-                </select>
+                <PriorityDropDown view="list" value={ filterConfig } handleOnChange={ handleSelectOnChange } />
               </th>
               <th className="width-quarter">
                 Actions                
