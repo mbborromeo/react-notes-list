@@ -8,8 +8,9 @@ import './List.css';
 // Reference: https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks
 function List() {
   const [list, setList] = useState( [] );
-  const [filterConfig, setFilterConfig] = useState({ key: 'all' }); // , direction: 'ascending'
+  const [filterConfig, setFilterConfig] = useState('all');
 
+  /*
   const getArrayIndexOfItem = useCallback(
     (id) => {
       const isItemOfInterest = (element) => element.id === id;
@@ -17,6 +18,7 @@ function List() {
     },
     [list]
   );
+  */
 
   const deleteToDo = useCallback(
     (id) => {
@@ -50,14 +52,6 @@ function List() {
     [list, getMaxID]
   );  
 
-  const requestFilter = useCallback(
-    (key) => {
-      // set to new key
-      setFilterConfig({ key });
-    },
-    [filterConfig] // dependencies that require a re-render for
-  ); 
-
   // Reference: https://dev.to/saranshk/react-hooks-and-local-storage-let-s-build-a-todo-app-39g3
   // empty array dependency so effect only runs once initially
   useEffect(() => {
@@ -75,10 +69,10 @@ function List() {
   const filteredResults = useMemo(
     () => {
       if (list) {
-        if( filterConfig.key==="all" ){
+        if( filterConfig==="all" ){
           return list
         } else {
-          const filteredList = list.filter( (note) => note.priority===filterConfig.key );
+          const filteredList = list.filter( (note) => note.priority===filterConfig );
           return filteredList;
         }        
       }
@@ -105,8 +99,8 @@ function List() {
               <th className="width-quarter">
                 Priority&nbsp;
                 <select 
-                  value={ filterConfig.key }
-                  onChange={ (e) => requestFilter(e.target.value) }
+                  value={ filterConfig }
+                  onChange={ (e) => setFilterConfig(e.target.value) }
                 >
                   <option value="all">ALL</option>
                   <option value="high">High</option>
