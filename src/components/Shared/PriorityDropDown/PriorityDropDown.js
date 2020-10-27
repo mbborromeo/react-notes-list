@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PriorityDropDown({ view, value, handleOnChange}){
+function PriorityDropDown({ value, handleOnChange, view}){
 
   return (
     <select 
