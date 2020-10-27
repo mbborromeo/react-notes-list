@@ -8,10 +8,7 @@ function Detail({ match }) {
   const [list, setList] = useState( [] );
   const [existingNote, setExistingNote] = useState('');
   const [existingPriority, setExistingPriority] = useState('');
-
-  //const [detail, setDetail] = useState({});
   const [loaded, setLoaded] = useState(false);
-  //const [hasError, setHasError] = useState(false);
   const detailID = parseInt(match.params.id);
 
   useEffect(() => {
@@ -19,12 +16,11 @@ function Detail({ match }) {
 
     if (localList) {
       setList( localList );
-      //setDetail( localList[detailID] ); //.detailID
       setExistingNote( localList[detailID-1].content );
       setExistingPriority( localList[detailID-1].priority );
       setLoaded(true);
     }
-  }, []); //detailID
+  }, [detailID]);
 
   useEffect(() => {
     localStorage.setItem( 'localList', JSON.stringify( list ) );
@@ -33,13 +29,11 @@ function Detail({ match }) {
   const editToDo = useCallback(
     (text, priority) => {
       const newListItem = {
-        //id: getMaxID() + 1,
         id: detailID,
         content: text,
         priority: priority
       };
 
-      //const newList = [...list, newListItem]; // add new item to end of list
       // update array item at index detailID
       const newList = [...list];
       newList[detailID-1] = newListItem;
@@ -58,9 +52,6 @@ function Detail({ match }) {
       }
       
       editToDo(existingNote, existingPriority);
-      // reset field to empty
-      // setNewItem('');
-      // setItemPriority('');
 
       // notify user note was saved and go back to Homepage
 
@@ -68,7 +59,7 @@ function Detail({ match }) {
     [existingNote, existingPriority]
   );
 
-  if (loaded && list.length > 0) { //Object.keys(detail).length
+  if (loaded && list.length > 0) {
     return (
       <div>
         <h3>Note</h3>
@@ -117,13 +108,9 @@ function Detail({ match }) {
         </Link>
       </div>
     );
-  } if (loaded && list.length === 0) { // Object.keys(detail).length
+  } if (loaded && list.length === 0) {
     return <div>No detail to display</div>;
-  } 
-  /*if (hasError) {
-    return <div>Error loading</div>;
   }
-  */
   return <div>Loading...</div>;
 }
 
