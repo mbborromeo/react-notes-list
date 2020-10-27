@@ -9,9 +9,12 @@ I assume free-text notes can be multiple lines during input, so am attempting to
 Local Storage is on web-browser.
 
 ## To Do
+- If no changes upon editing a note, then let user know and don't save
+- Replace alert() with dynamic text in div
 - Fix CSS for Homepage so long notes are truncated with elipsis
 - Setup Eslint for code consistency and checking React-Hooks rules
-- Break AddForm into smaller re-usable components for select dropdown and textarea
+- Live search on content
+- Implement prop-types or Typescript
 
 ## Available Scripts
 
