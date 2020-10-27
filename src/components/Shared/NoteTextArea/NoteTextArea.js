@@ -1,6 +1,6 @@
 import React from 'react';
 
-function NoteTextArea({newItem, handleOnChange}){
+function NoteTextArea({value, handleOnChange}){
 
   return (
     <textarea 
@@ -10,7 +10,7 @@ function NoteTextArea({newItem, handleOnChange}){
       cols="35"
       wrap="hard"
       placeholder="Type note"
-      value={ newItem }
+      value={ value }
       onChange={ handleOnChange }
     />
   );

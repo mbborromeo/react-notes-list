@@ -39,10 +39,10 @@ function AddForm({ addFunction }) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <NoteTextArea newItem={ newItem } handleOnChange={ handleTextAreaOnChange } />
+      <NoteTextArea value={ newItem } handleOnChange={ handleTextAreaOnChange } />
       <br />
       
-      <PriorityDropDown prioritySelected={ itemPriority } handleOnChange={ handleSelectOnChange } />
+      <PriorityDropDown value={ itemPriority } handleOnChange={ handleSelectOnChange } />
       &nbsp;&nbsp;
 
       <button type="submit">Add</button>

@@ -1,12 +1,12 @@
 import React from 'react';
 
-function PriorityDropDown({ prioritySelected, handleOnChange}){
+function PriorityDropDown({ value, handleOnChange}){
 
   return (
     <select 
       name="priority" 
       id="priority" 
-      value={ prioritySelected }
+      value={ value }
       onChange={ handleOnChange }
     >
       <option value="" disabled hidden>Select priority</option>

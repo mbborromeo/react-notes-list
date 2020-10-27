@@ -3,6 +3,8 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import '../../App.css';
+import NoteTextArea from '../Shared/NoteTextArea/NoteTextArea';
+import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 
 function Detail({ match }) {  
   const [list, setList] = useState( [] );
@@ -63,33 +65,30 @@ function Detail({ match }) {
     [existingNote, existingPriority, loaded, editToDo]
   );
 
+  const handleTextAreaOnChange = useCallback(
+    (e) => {
+      setExistingNote(e.target.value)
+    },
+    []
+  );
+
+  const handleSelectOnChange = useCallback(
+    (e) => {
+      setExistingPriority(e.target.value)
+    },
+    []
+  );
+
   if (loaded && list.length > 0) {
     return (
       <div>
         <h3>Note - ID { detailID }</h3>
 
         <form onSubmit={handleSubmit}>
-          <textarea 
-            id="note" 
-            name="note" 
-            rows="16" 
-            cols="35"
-            wrap="hard"
-            value={ existingNote } 
-            onChange={(e) => setExistingNote(e.target.value)}
-          />          
-          <br /><br />          
-
-          <select 
-            name="priority" 
-            id="priority" 
-            value={ existingPriority }
-            onChange={(e) => setExistingPriority(e.target.value) }
-          >            
-            <option value="high">High</option>
-            <option value="normal">Normal</option>
-            <option value="low">Low</option>
-          </select>
+          <NoteTextArea value={ existingNote } handleOnChange={ handleTextAreaOnChange } />
+          <br /><br />
+          
+          <PriorityDropDown value={ existingPriority } handleOnChange={ handleSelectOnChange } />
           <br /><br />
 
           <button type="submit">Update</button>
