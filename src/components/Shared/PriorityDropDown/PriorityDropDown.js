@@ -1,6 +1,6 @@
 import React from 'react';
 
-function PriorityDropDown({ value, handleOnChange}){
+function PriorityDropDown({ value, handleOnChange, view}){
 
   return (
     <select 
@@ -9,7 +9,11 @@ function PriorityDropDown({ value, handleOnChange}){
       value={ value }
       onChange={ handleOnChange }
     >
-      <option value="" disabled hidden>Select priority</option>
+      { view==="list" ?
+        <option value="all">ALL</option>
+        :
+        <option value="" disabled hidden>Select priority</option>
+      }       
       <option value="high">High</option>
       <option value="normal">Normal</option>
       <option value="low">Low</option>

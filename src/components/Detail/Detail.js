@@ -85,7 +85,7 @@ function Detail({ match }) {
         <h3>Note - ID { detailID }</h3>
 
         <form onSubmit={handleSubmit}>
-          <NoteTextArea value={ existingNote } handleOnChange={ handleTextAreaOnChange } />
+          <NoteTextArea view="detail" value={ existingNote } handleOnChange={ handleTextAreaOnChange } />
           <br /><br />
           
           <PriorityDropDown value={ existingPriority } handleOnChange={ handleSelectOnChange } />
