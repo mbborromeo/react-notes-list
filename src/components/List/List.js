@@ -5,11 +5,10 @@ import { Link } from 'react-router-dom';
 import AddForm from './AddForm/AddForm';
 import './List.css';
 
+// Reference: https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks
 function List() {
   const [list, setList] = useState( [] );
-  const [filterConfig, setFilterConfig] = useState({ key: 'all' });
-  //const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'ascending' });  
-  //const [hasError, setHasError] = useState(false);
+  const [filterConfig, setFilterConfig] = useState({ key: 'all' }); // , direction: 'ascending'
 
   const getArrayIndexOfItem = useCallback(
     (id) => {
@@ -19,35 +18,10 @@ function List() {
     [list]
   );
 
-  // Reference: https://www.digitalocean.com/community/tutorials/how-to-build-a-react-to-do-app-with-react-hooks
-  /*
-  const completeToDo = useCallback(
-    (id) => {
-      const indexOfItem = getArrayIndexOfItem(id);
-      const copyOfList = [...list];
-
-      if (!copyOfList[indexOfItem].completed) {
-        copyOfList[indexOfItem].completed = true;
-      } else {
-        copyOfList[indexOfItem].completed = false;
-      }
-
-      setList(copyOfList);
-    },
-    [list, getArrayIndexOfItem] // dependencies that require a re-render for
-  );
-  */
-  const editToDo = (index, text) => {
-    console.log('editToDo')
-    // const copyOfList = [...list];
-    // copyOfList[index].content = text;
-    // setList(copyOfList);
-  };
-
   const deleteToDo = useCallback(
     (id) => {
       const filteredList = list.filter((elem) => elem.id !== id);
-      setList(filteredList); // copyOfList
+      setList(filteredList);
     },
     [list] // dependencies that require a re-render for //, getArrayIndexOfItem
   );
@@ -78,7 +52,7 @@ function List() {
 
   const requestFilter = useCallback(
     (key) => {
-      // set to new key (and direction)
+      // set to new key
       setFilterConfig({ key });
     },
     [filterConfig] // dependencies that require a re-render for
