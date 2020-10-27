@@ -38,6 +38,7 @@ function Detail({ match }) {
       const newList = [...list];
       newList[detailID-1] = newListItem;
       setList(newList);
+      setLoaded(true);
     },
     [list, detailID]
   ); 
@@ -45,6 +46,7 @@ function Detail({ match }) {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
+      setLoaded(false);
 
       if (!existingNote || !existingPriority ) {        
         alert('Note must not be empty and priority must be selected')
@@ -54,9 +56,11 @@ function Detail({ match }) {
       editToDo(existingNote, existingPriority);
 
       // notify user note was saved and go back to Homepage
-
+      if( loaded ){
+        alert('Note has been updated')
+      }
     },
-    [existingNote, existingPriority]
+    [existingNote, existingPriority, loaded, editToDo]
   );
 
   if (loaded && list.length > 0) {

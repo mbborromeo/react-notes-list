@@ -27,7 +27,7 @@ function AddForm({ addFunction }) {
         id="note" 
         name="note" 
         rows="4" 
-        cols="40"
+        cols="35"
         wrap="hard"
         placeholder="Type note"
         value={newItem}
