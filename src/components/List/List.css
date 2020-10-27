@@ -94,15 +94,8 @@ thead button.descending::after {
     content: '\2193';
 }
 
-thead button#completed {
-    min-width: 105px;
-    text-align: left;
-}
-
 thead button.ascending::after,
-thead button.descending::after,
-thead button#completed.ascending::after,
-thead button#completed.descending::after
+thead button.descending::after
 {
     margin-left: 5px;
 }

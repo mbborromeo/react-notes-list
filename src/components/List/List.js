@@ -163,11 +163,12 @@ function List() {
                     { item.priority }
                   </td>
                   <td>
-                    <button type="button" 
-                      onClick={() => editToDo(item.id)}
+                    <Link
+                      to={`/detail/${item.id}`}
+                      data-id={item.id}
                     >
                       Edit
-                    </button>
+                    </Link>
                     <button type="button" aria-label={`Delete item ${item.id}`} onClick={() => deleteToDo(item.id)}>X</button>
                   </td>
                 </tr>

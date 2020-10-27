@@ -1,80 +1,111 @@
 import React, {
-  useState, useEffect, useMemo //, useCallback
+  useState, useEffect, useCallback //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-//import DataService from '../../services/DataService';
 import '../../App.css';
 
 function Detail({ match }) {  
   const [list, setList] = useState( [] );
-  const [detail, setDetail] = useState({});
+  const [existingNote, setExistingNote] = useState('');
+  const [existingPriority, setExistingPriority] = useState('');
+
+  //const [detail, setDetail] = useState({});
   const [loaded, setLoaded] = useState(false);
   //const [hasError, setHasError] = useState(false);
-  const detailID = match.params.id;
+  const detailID = parseInt(match.params.id);
 
-  // save a memoized copy of the function for re-use instead of creating a new function each time
-  /*
-  const dataService = useMemo(
-    () => new DataService(),
-    []
-  );
-  */
-
-  /*
-  useEffect(() => {
-    if (detailID) {
-      dataService.getDetail(detailID)
-        .then((response) => {
-          // handle success
-          console.log('getDetail response', response)
-          setDetail(response);
-          setLoaded(true);
-        })
-        .catch((error) => {
-          // handle error
-          console.error('axios.jsonp CATCH', error);
-          setHasError(true);
-        })
-        .finally(() => {
-          // always executed
-        });
-    }
-  },
-  [dataService, detailID]);
-  */
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
 
     if (localList) {
       setList( localList );
       //setDetail( localList[detailID] ); //.detailID
+      setExistingNote( localList[detailID-1].content );
+      setExistingPriority( localList[detailID-1].priority );
       setLoaded(true);
     }
   }, []); //detailID
 
+  useEffect(() => {
+    localStorage.setItem( 'localList', JSON.stringify( list ) );
+  }, [list]);
+
+  const editToDo = useCallback(
+    (text, priority) => {
+      const newListItem = {
+        //id: getMaxID() + 1,
+        id: detailID,
+        content: text,
+        priority: priority
+      };
+
+      //const newList = [...list, newListItem]; // add new item to end of list
+      // update array item at index detailID
+      const newList = [...list];
+      newList[detailID-1] = newListItem;
+      setList(newList);
+    },
+    [list, detailID]
+  ); 
+
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+
+      if (!existingNote || !existingPriority ) {        
+        alert('Note must not be empty and priority must be selected')
+        return; // exit if field empty
+      }
+      
+      editToDo(existingNote, existingPriority);
+      // reset field to empty
+      // setNewItem('');
+      // setItemPriority('');
+
+      // notify user note was saved and go back to Homepage
+
+    },
+    [existingNote, existingPriority]
+  );
 
   if (loaded && list.length > 0) { //Object.keys(detail).length
     return (
       <div>
         <h3>Note</h3>
 
-        <span id="note">
-          { list[detailID-1].content }
-        </span>
-        <br /><br />
-        
-        <span id="id">
-          ID:
-          {' '}
-          { detailID }
-        </span>
-        <br /><br />
-        
-        <span id="completed">
-          Priority:
-          {' '}
-          { list[detailID-1].priority }
-        </span>
+        <form onSubmit={handleSubmit}>
+          <textarea 
+            id="note" 
+            name="note" 
+            rows="4" 
+            cols="40"
+            wrap="hard"
+            value={ existingNote } 
+            onChange={(e) => setExistingNote(e.target.value)}
+          />          
+          <br /><br />
+          
+          <span id="id">
+            ID:
+            {' '}
+            { detailID }
+          </span>
+          <br /><br />
+
+          <select 
+            name="priority" 
+            id="priority" 
+            value={ existingPriority }
+            onChange={(e) => setExistingPriority(e.target.value) }
+          >            
+            <option value="high">High</option>
+            <option value="normal">Normal</option>
+            <option value="low">Low</option>
+          </select>
+          <br /><br />
+
+          <button type="submit">Update</button>
+        </form>
 
         <br />
         <br />
@@ -88,7 +119,8 @@ function Detail({ match }) {
     );
   } if (loaded && list.length === 0) { // Object.keys(detail).length
     return <div>No detail to display</div>;
-  } /*if (hasError) {
+  } 
+  /*if (hasError) {
     return <div>Error loading</div>;
   }
   */
