@@ -104,6 +104,7 @@ function List() {
               </th>
               <th className="width-quarter">
                 Priority&nbsp;
+                
                 <select 
                   value={ filterConfig }
                   onChange={ (e) => setFilterConfig(e.target.value) }
