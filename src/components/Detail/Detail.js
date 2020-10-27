@@ -66,26 +66,19 @@ function Detail({ match }) {
   if (loaded && list.length > 0) {
     return (
       <div>
-        <h3>Note</h3>
+        <h3>Note - ID { detailID }</h3>
 
         <form onSubmit={handleSubmit}>
           <textarea 
             id="note" 
             name="note" 
-            rows="4" 
-            cols="40"
+            rows="16" 
+            cols="35"
             wrap="hard"
             value={ existingNote } 
             onChange={(e) => setExistingNote(e.target.value)}
           />          
-          <br /><br />
-          
-          <span id="id">
-            ID:
-            {' '}
-            { detailID }
-          </span>
-          <br /><br />
+          <br /><br />          
 
           <select 
             name="priority" 

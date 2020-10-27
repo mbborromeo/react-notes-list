@@ -22,8 +22,9 @@ function List() {
 
   const deleteToDo = useCallback(
     (id) => {
-      const filteredList = list.filter((elem) => elem.id !== id);
-      setList(filteredList);
+      const editedList = [...list];
+      editedList[id - 1].deleted = true;
+      setList( editedList );
     },
     [list] // dependencies that require a re-render for //, getArrayIndexOfItem
   );
@@ -43,7 +44,8 @@ function List() {
       const newListItem = {
         id: getMaxID() + 1,
         content: text,
-        priority: priority
+        priority: priority,
+        deleted: false
       };
 
       const newList = [...list, newListItem]; // add new item to end of list
@@ -69,11 +71,15 @@ function List() {
   const filteredResults = useMemo(
     () => {
       if (list) {
+        // filter out deleted
+        const filteredListNonDeleted = list.filter( (note) => !note.deleted );        
+
+        // filter by priority
         if( filterConfig==="all" ){
-          return list
+          return filteredListNonDeleted;
         } else {
-          const filteredList = list.filter( (note) => note.priority===filterConfig );
-          return filteredList;
+          const filteredListByPriority = filteredListNonDeleted.filter( (note) => note.priority===filterConfig );
+          return filteredListByPriority;
         }        
       }
       return undefined;
@@ -93,7 +99,7 @@ function List() {
         <table>
           <thead>
             <tr>
-              <th>
+              <th className="width-half">
                 Note
               </th>
               <th className="width-quarter">
@@ -127,10 +133,10 @@ function List() {
                       { item.content }
                     </Link>
                   </td>
-                  <td>
+                  <td className="width-quarter">
                     { item.priority }
                   </td>
-                  <td>
+                  <td className="width-quarter">
                     <Link
                       to={`/detail/${item.id}`}
                       data-id={item.id}
