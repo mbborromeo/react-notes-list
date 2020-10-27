@@ -93,7 +93,7 @@ function List() {
         <table>
           <thead>
             <tr>
-              <th>
+              <th className="width-half">
                 Note
               </th>
               <th className="width-quarter">
@@ -127,10 +127,10 @@ function List() {
                       { item.content }
                     </Link>
                   </td>
-                  <td>
+                  <td className="width-quarter">
                     { item.priority }
                   </td>
-                  <td>
+                  <td className="width-quarter">
                     <Link
                       to={`/detail/${item.id}`}
                       data-id={item.id}

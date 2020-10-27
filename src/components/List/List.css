@@ -15,15 +15,12 @@
 table {
     margin: 0 auto; /* center align */
     width: 80%;
+    /*position: relative;*/ /* needed for position sticky on child */
 }
 
 th, td {    
     text-align: left;  
     vertical-align: top;
-}
-
-table {
-    /*position: relative;*/ /* needed for position sticky on child */
 }
 
 table tbody tr td {
@@ -34,12 +31,16 @@ table tbody tr td a {
     text-decoration: none;
 }
 
-table tbody tr td.content {
-    /* white-space: pre-wrap; */
+table tbody tr td.content {    
     display: block;
-    width: 75%;
-    height: 40px;
-    /* white-space: nowrap; */
+    height: auto;
+    max-height: 40px;  
+    /* white-space: pre-wrap; */
+    /* 
+    white-space: nowrap; 
+    width: 300px;
+    max-width: 100%;
+    */
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -60,6 +61,10 @@ table thead tr th {
     */
     background-color: #FFF;
     padding-bottom: 10px;
+}
+
+table thead tr th.width-half {
+    width: 50%;
 }
 
 table thead tr th.width-quarter {

@@ -73,7 +73,7 @@ function Detail({ match }) {
             id="note" 
             name="note" 
             rows="4" 
-            cols="40"
+            cols="35"
             wrap="hard"
             value={ existingNote } 
             onChange={(e) => setExistingNote(e.target.value)}
