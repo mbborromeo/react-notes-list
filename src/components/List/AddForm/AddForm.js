@@ -1,4 +1,6 @@
 import React, { useState, useCallback } from 'react';
+import NoteTextArea from '../../Shared/NoteTextArea/NoteTextArea';
+import PriorityDropDown from '../../Shared/PriorityDropDown/PriorityDropDown';
 
 function AddForm({ addFunction }) {
   const [newItem, setNewItem] = useState('');
@@ -21,31 +23,26 @@ function AddForm({ addFunction }) {
     [newItem, itemPriority, addFunction]
   );
 
+  const handleTextAreaOnChange = useCallback(
+    (e) => {
+      setNewItem(e.target.value)
+    },
+    []
+  );
+
+  const handleSelectOnChange = useCallback(
+    (e) => {
+      setItemPriority(e.target.value)
+    },
+    []
+  );
+
   return (
     <form onSubmit={handleSubmit}>
-      <textarea 
-        id="note" 
-        name="note" 
-        rows="4" 
-        cols="35"
-        wrap="hard"
-        placeholder="Type note"
-        value={newItem}
-        onChange={(e) => setNewItem(e.target.value)}
-      />
+      <NoteTextArea newItem={ newItem } handleOnChange={ handleTextAreaOnChange } />
       <br />
-
-      <select 
-        name="priority" 
-        id="priority" 
-        value={ itemPriority }
-        onChange={(e) => setItemPriority(e.target.value) }
-      >
-        <option value="" disabled hidden>Select priority</option>
-        <option value="high">High</option>
-        <option value="normal">Normal</option>
-        <option value="low">Low</option>
-      </select>
+      
+      <PriorityDropDown prioritySelected={ itemPriority } handleOnChange={ handleSelectOnChange } />
       &nbsp;&nbsp;
 
       <button type="submit">Add</button>
