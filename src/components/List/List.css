@@ -15,6 +15,7 @@
 table {
     margin: 0 auto; /* center align */
     width: 80%;
+    /*position: relative;*/ /* needed for position sticky on child */
 }
 
 th, td {    
@@ -22,12 +23,29 @@ th, td {
     vertical-align: top;
 }
 
-table {
-    /*position: relative;*/ /* needed for position sticky on child */
+table tbody tr td {
+    margin-bottom: 1em;
 }
 
 table tbody tr td a {
     text-decoration: none;
+}
+
+table tbody tr td.content {    
+    display: block;
+    height: auto;
+    max-height: 4em; 
+    /* white-space: pre-wrap; */
+    /* 
+    white-space: nowrap; 
+    width: 300px;
+    max-width: 100%;
+    */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+span#note {
     white-space: pre-wrap;
 }
 
@@ -43,6 +61,14 @@ table thead tr th {
     */
     background-color: #FFF;
     padding-bottom: 10px;
+}
+
+table thead tr th.width-half {
+    width: 50%;
+}
+
+table thead tr th.width-quarter {
+    width: 25%;
 }
 
 table thead tr th:first-child button {
@@ -73,23 +99,8 @@ thead button.descending::after {
     content: '\2193';
 }
 
-thead button#completed {
-    min-width: 105px;
-    text-align: left;
-}
-
-thead button#completed.ascending::after {
-    content: 'Y';
-}
-
-thead button#completed.descending::after {
-    content: 'N';
-}
-
 thead button.ascending::after,
-thead button.descending::after,
-thead button#completed.ascending::after,
-thead button#completed.descending::after
+thead button.descending::after
 {
     margin-left: 5px;
 }

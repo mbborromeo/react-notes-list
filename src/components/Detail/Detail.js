@@ -1,65 +1,98 @@
 import React, {
-  useState, useEffect, useMemo //, useCallback
+  useState, useEffect, useCallback //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-import DataService from '../../services/DataService';
 import '../../App.css';
+import NoteTextArea from '../Shared/NoteTextArea/NoteTextArea';
+import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 
 function Detail({ match }) {  
-  const [detail, setDetail] = useState({});
+  const [list, setList] = useState( [] );
+  const [existingNote, setExistingNote] = useState('');
+  const [existingPriority, setExistingPriority] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const detailID = match.params.id;
+  const detailID = parseInt(match.params.id);
 
-  // save a memoized copy of the function for re-use instead of creating a new function each time
-  const dataService = useMemo(
-    () => new DataService(),
+  useEffect(() => {
+    const localList = JSON.parse( localStorage.getItem('localList') );
+
+    if (localList) {
+      setList( localList );
+      setExistingNote( localList[detailID-1].content );
+      setExistingPriority( localList[detailID-1].priority );
+      setLoaded(true);
+    }
+  }, [detailID]);
+
+  useEffect(() => {
+    localStorage.setItem( 'localList', JSON.stringify( list ) );
+  }, [list]);
+
+  const editToDo = useCallback(
+    (text, priority) => {
+      const newListItem = {
+        id: detailID,
+        content: text,
+        priority: priority
+      };
+
+      // update array item at index detailID
+      const newList = [...list];
+      newList[detailID-1] = newListItem;
+      setList(newList);
+      setLoaded(true);
+    },
+    [list, detailID]
+  ); 
+
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      setLoaded(false);
+
+      if (!existingNote || !existingPriority ) {        
+        alert('Note must not be empty and priority must be selected')
+        return; // exit if field empty
+      }
+      
+      editToDo(existingNote, existingPriority);
+
+      // notify user note was saved and go back to Homepage
+      if( loaded ){
+        alert('Note has been updated')
+      }
+    },
+    [existingNote, existingPriority, loaded, editToDo]
+  );
+
+  const handleTextAreaOnChange = useCallback(
+    (e) => {
+      setExistingNote(e.target.value)
+    },
     []
   );
 
-  useEffect(() => {
-    if (detailID) {
-      dataService.getDetail(detailID)
-        .then((response) => {
-          // handle success
-          console.log('getDetail response', response)
-          setDetail(response);
-          setLoaded(true);
-        })
-        .catch((error) => {
-          // handle error
-          console.error('axios.jsonp CATCH', error);
-          setHasError(true);
-        })
-        .finally(() => {
-          // always executed
-        });
-    }
-  },
-  [dataService, detailID]);
+  const handleSelectOnChange = useCallback(
+    (e) => {
+      setExistingPriority(e.target.value)
+    },
+    []
+  );
 
-  if (loaded && Object.keys(detail).length > 0) {
+  if (loaded && list.length > 0) {
     return (
       <div>
-        <span id="id">
-          ID:
-          {' '}
-          { detailID }
-        </span>
-        <br />
+        <h3>Note - ID { detailID }</h3>
 
-        <span id="title">
-          Title:
-          {' '}
-          { detail.title }
-        </span>
-        <br />
-        
-        <span id="completed">
-          Completed:
-          {' '}
-          { detail.completed.toString() }
-        </span>
+        <form onSubmit={handleSubmit}>
+          <NoteTextArea view="detail" value={ existingNote } handleOnChange={ handleTextAreaOnChange } />
+          <br /><br />
+          
+          <PriorityDropDown value={ existingPriority } handleOnChange={ handleSelectOnChange } />
+          <br /><br />
+
+          <button type="submit">Update</button>
+        </form>
 
         <br />
         <br />
@@ -71,10 +104,8 @@ function Detail({ match }) {
         </Link>
       </div>
     );
-  } if (loaded && Object.keys(detail).length === 0) {
+  } if (loaded && list.length === 0) {
     return <div>No detail to display</div>;
-  } if (hasError) {
-    return <div>Error loading</div>;
   }
   return <div>Loading...</div>;
 }
