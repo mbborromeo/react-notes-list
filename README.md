@@ -10,6 +10,7 @@ Local Storage is on web-browser.
 
 ## To Do
 - If no changes upon editing a note, then let user know and don't save
+- Redirect to list view (homepage) after saving on edit
 - Replace alert() with dynamic text in div
 - Fix CSS for Homepage so long notes are truncated with elipsis
 - Setup Eslint for code consistency and checking React-Hooks rules
