@@ -34,7 +34,7 @@ table tbody tr td a {
 table tbody tr td.content {    
     display: block;
     height: auto;
-    max-height: 40px;  
+    max-height: 4em; 
     /* white-space: pre-wrap; */
     /* 
     white-space: nowrap; 
