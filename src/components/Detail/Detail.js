@@ -2,7 +2,8 @@ import React, {
   useState, useEffect, useCallback //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-import '../../App.css';
+// import '../../App.css';
+import './Detail.css';
 import NoteTextArea from '../Shared/NoteTextArea/NoteTextArea';
 import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 
@@ -11,6 +12,7 @@ function Detail({ match }) {
   const [existingNote, setExistingNote] = useState('');
   const [existingPriority, setExistingPriority] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
   const detailID = parseInt(match.params.id);
 
   useEffect(() => {
@@ -51,7 +53,8 @@ function Detail({ match }) {
       setLoaded(false);
 
       if (!existingNote || !existingPriority ) {        
-        alert('Note must not be empty and priority must be selected')
+        //alert('Note must not be empty and priority must be selected')
+        setFeedbackMessage('Note must not be empty and priority must be selected');
         return; // exit if field empty
       }
       
@@ -59,7 +62,8 @@ function Detail({ match }) {
 
       // notify user note was saved and go back to Homepage
       if( loaded ){
-        alert('Note has been updated')
+        //alert('Note has been updated')
+        setFeedbackMessage('Note has been updated');
       }
     },
     [existingNote, existingPriority, loaded, editToDo]
@@ -93,6 +97,11 @@ function Detail({ match }) {
 
           <button type="submit">Update</button>
         </form>
+
+        <br />
+        <div id="feedback">
+          { feedbackMessage }
+        </div>
 
         <br />
         <br />
