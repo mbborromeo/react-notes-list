@@ -28,6 +28,8 @@ function Detail({ match }) {
 
   const prevExistingNote = usePrevious(existingNote);
   const prevExistingPriority = usePrevious(existingPriority);
+  console.log('prevExistingNote', prevExistingNote, typeof prevExistingNote)
+  console.log('prevExistingPriority', prevExistingPriority, typeof prevExistingPriority)
 
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
