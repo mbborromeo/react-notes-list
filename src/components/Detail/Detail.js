@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useCallback //, useMemo
+  useState, useEffect, useCallback, useRef //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
 import './Detail.css';
@@ -14,6 +14,21 @@ function Detail({ match }) {
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const detailID = parseInt(match.params.id);
 
+  // Using useRef to get reference of previous state    
+  // https://reactjs.org/docs/hooks-faq.html#how-to-get-the-previous-props-or-state
+  const usePrevious = (value) => {
+    const ref = useRef();
+
+    useEffect(() => {
+      ref.current = value;
+    });
+
+    return ref.current;
+  }
+
+  const prevExistingNote = usePrevious(existingNote);
+  const prevExistingPriority = usePrevious(existingPriority);
+
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
 
@@ -27,7 +42,7 @@ function Detail({ match }) {
 
   useEffect(() => {
     localStorage.setItem( 'localList', JSON.stringify( list ) );
-  }, [list]);
+  }, [list]);  
 
   const editToDo = useCallback(
     (text, priority) => {
@@ -41,10 +56,10 @@ function Detail({ match }) {
       const newList = [...list];
       newList[detailID-1] = newListItem;
       setList(newList);
-      setFeedbackMessage('Note updated');
+      setFeedbackMessage('Note updated');  
     },
     [list, detailID]
-  ); 
+  );
 
   const handleSubmit = useCallback(
     (e) => {
@@ -65,19 +80,17 @@ function Detail({ match }) {
         return; // exit if field empty
       }
 
-      /*
-      if (existingNote===prevState.existingNote && existingPriority===prevState.existingPriority) {
+      if (existingNote===prevExistingNote && existingPriority===prevExistingPriority) {
         setFeedbackMessage('No change has been made');
         return; // exit if field empty
       }
-      */
       
       editToDo(existingNote, existingPriority);
 
       // notify user note was saved and go back to Homepage
 
     },
-    [existingNote, existingPriority, editToDo]
+    [existingNote, existingPriority, prevExistingNote, prevExistingPriority, editToDo]
   );
 
   const handleTextAreaOnChange = useCallback(
