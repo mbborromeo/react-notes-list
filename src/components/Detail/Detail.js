@@ -77,7 +77,7 @@ function Detail({ match }) {
       // notify user note was saved and go back to Homepage
 
     },
-    [existingNote, existingPriority, loaded, editToDo]
+    [existingNote, existingPriority, editToDo]
   );
 
   const handleTextAreaOnChange = useCallback(
