@@ -2,7 +2,6 @@ import React, {
   useState, useEffect, useCallback //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-// import '../../App.css';
 import './Detail.css';
 import NoteTextArea from '../Shared/NoteTextArea/NoteTextArea';
 import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
@@ -52,18 +51,23 @@ function Detail({ match }) {
       e.preventDefault();
       setLoaded(false);
 
-      if (!existingNote || !existingPriority ) {        
-        //alert('Note must not be empty and priority must be selected')
+      if (!existingNote || !existingPriority ) {
         setFeedbackMessage('Note must not be empty and priority must be selected');
         return; // exit if field empty
       }
+
+      /*
+      if (existingNote===prev.existingNote && existingPriority===prev.existingPriority) {
+        setFeedbackMessage('No change has been made');
+        return; // exit if field empty
+      }
+      */
       
       editToDo(existingNote, existingPriority);
 
       // notify user note was saved and go back to Homepage
       if( loaded ){
-        //alert('Note has been updated')
-        setFeedbackMessage('Note has been updated');
+        setFeedbackMessage('Note updated');
       }
     },
     [existingNote, existingPriority, loaded, editToDo]
