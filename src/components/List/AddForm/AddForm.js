@@ -8,6 +8,7 @@ function AddForm({ addFunction }) {
   const [itemPriority, setItemPriority] = useState('');
   const [feedbackMessage, setFeedbackMessage] = useState('');
 
+  // add useCallback or useMemo...
   const resetFields = () => {
     setNewItem('');
     setItemPriority('');
