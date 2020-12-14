@@ -10,7 +10,6 @@ Local Storage is on web-browser.
 
 ## To Do
 - Fade in/out form confirmation message text
-- If no changes upon editing a note, then let user know and don't save
 - Redirect to list view (homepage) after saving on edit
 - Fix CSS for Homepage so long notes are truncated with elipsis
 - Setup Eslint for code consistency and checking React-Hooks rules
