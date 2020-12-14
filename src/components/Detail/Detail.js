@@ -1,8 +1,8 @@
 import React, {
-  useState, useEffect, useCallback //, useMemo
+  useState, useEffect, useCallback, useRef //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
-import '../../App.css';
+import './Detail.css';
 import NoteTextArea from '../Shared/NoteTextArea/NoteTextArea';
 import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 
@@ -11,7 +11,25 @@ function Detail({ match }) {
   const [existingNote, setExistingNote] = useState('');
   const [existingPriority, setExistingPriority] = useState('');
   const [loaded, setLoaded] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState('');
   const detailID = parseInt(match.params.id);
+
+  // Using useRef to get reference of previous state    
+  // https://reactjs.org/docs/hooks-faq.html#how-to-get-the-previous-props-or-state
+  const usePrevious = (value) => {
+    const ref = useRef();
+
+    useEffect(() => {
+      ref.current = value;
+    });
+
+    return ref.current;
+  }
+
+  const prevExistingNote = usePrevious(existingNote);
+  const prevExistingPriority = usePrevious(existingPriority);
+  console.log('prevExistingNote', prevExistingNote, typeof prevExistingNote)
+  console.log('prevExistingPriority', prevExistingPriority, typeof prevExistingPriority)
 
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
@@ -26,7 +44,7 @@ function Detail({ match }) {
 
   useEffect(() => {
     localStorage.setItem( 'localList', JSON.stringify( list ) );
-  }, [list]);
+  }, [list]);  
 
   const editToDo = useCallback(
     (text, priority) => {
@@ -40,29 +58,41 @@ function Detail({ match }) {
       const newList = [...list];
       newList[detailID-1] = newListItem;
       setList(newList);
-      setLoaded(true);
+      setFeedbackMessage('Note updated');  
     },
     [list, detailID]
-  ); 
+  );
 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      setLoaded(false);
 
-      if (!existingNote || !existingPriority ) {        
-        alert('Note must not be empty and priority must be selected')
+      if (!existingNote && !existingPriority ) {
+        setFeedbackMessage('Note must not be empty and priority must be selected');
+        return; // exit if field empty
+      }
+
+      if (!existingNote && existingPriority ) {
+        setFeedbackMessage('Note must not be empty');
+        return; // exit if field empty
+      }
+
+      if (existingNote && !existingPriority ) {
+        setFeedbackMessage('Priority must be selected');
+        return; // exit if field empty
+      }
+
+      if (existingNote===prevExistingNote && existingPriority===prevExistingPriority) {
+        setFeedbackMessage('No change has been made');
         return; // exit if field empty
       }
       
       editToDo(existingNote, existingPriority);
 
       // notify user note was saved and go back to Homepage
-      if( loaded ){
-        alert('Note has been updated')
-      }
+
     },
-    [existingNote, existingPriority, loaded, editToDo]
+    [existingNote, existingPriority, prevExistingNote, prevExistingPriority, editToDo]
   );
 
   const handleTextAreaOnChange = useCallback(
@@ -93,6 +123,11 @@ function Detail({ match }) {
 
           <button type="submit">Update</button>
         </form>
+
+        <br />
+        <div id="feedback">
+          { feedbackMessage }
+        </div>
 
         <br />
         <br />

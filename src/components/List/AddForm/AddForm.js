@@ -1,24 +1,41 @@
 import React, { useState, useCallback } from 'react';
 import NoteTextArea from '../../Shared/NoteTextArea/NoteTextArea';
 import PriorityDropDown from '../../Shared/PriorityDropDown/PriorityDropDown';
+import '../../Detail/Detail.css';
 
 function AddForm({ addFunction }) {
   const [newItem, setNewItem] = useState('');
   const [itemPriority, setItemPriority] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
+
+  // add useCallback or useMemo...
+  const resetFields = () => {
+    setNewItem('');
+    setItemPriority('');
+    setFeedbackMessage('');
+  }
 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
 
-      if (!newItem || !itemPriority ) {        
-        alert('Note must not be empty and priority must be selected')
+      if (!newItem && !itemPriority) {        
+        setFeedbackMessage('Note must not be empty and priority must be selected');
+        return; // exit if field empty
+      }
+
+      if (!newItem && itemPriority) {        
+        setFeedbackMessage('Note must not be empty');
+        return; // exit if field empty
+      }
+
+      if (!itemPriority && newItem) {        
+        setFeedbackMessage('Priority must be selected');
         return; // exit if field empty
       }
       
       addFunction(newItem, itemPriority);
-      // reset field to empty
-      setNewItem('');
-      setItemPriority('');
+      resetFields();
     },
     [newItem, itemPriority, addFunction]
   );
@@ -52,10 +69,14 @@ function AddForm({ addFunction }) {
         type="button"
         value="Clear"
         onClick={() => {
-          setNewItem('');
-          setItemPriority('');
+          resetFields();
         }}
       />
+
+      <br />
+      <div id="feedback">
+        { feedbackMessage }
+      </div>
     </form>
   );
 }
