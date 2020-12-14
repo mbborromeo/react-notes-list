@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useCallback, useRef //, useMemo
+  useState, useEffect, useCallback //, useMemo, useRef
 } from 'react';
 import { Link } from 'react-router-dom';
 import './Detail.css';
@@ -13,23 +13,11 @@ function Detail({ match }) {
   const [loaded, setLoaded] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState('');
   const detailID = parseInt(match.params.id);
-
-  // Using useRef to get reference of previous state    
-  // https://reactjs.org/docs/hooks-faq.html#how-to-get-the-previous-props-or-state
-  const usePrevious = (value) => {
-    const ref = useRef();
-
-    useEffect(() => {
-      ref.current = value;
-    });
-
-    return ref.current;
-  }
-
-  const prevExistingNote = usePrevious(existingNote);
-  const prevExistingPriority = usePrevious(existingPriority);
-  console.log('prevExistingNote', prevExistingNote, typeof prevExistingNote)
-  console.log('prevExistingPriority', prevExistingPriority, typeof prevExistingPriority)
+  // Use useRef to get reference of previous state  
+  // ie. https://reactjs.org/docs/hooks-faq.html#how-to-get-the-previous-props-or-state
+  // or manually created a previous value state for note and priority
+  const [savedNote, setSavedNote] = useState('');
+  const [savedPriority, setSavedPriority] = useState('');
 
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
@@ -38,6 +26,8 @@ function Detail({ match }) {
       setList( localList );
       setExistingNote( localList[detailID-1].content );
       setExistingPriority( localList[detailID-1].priority );
+      setSavedNote( localList[detailID-1].content );
+      setSavedPriority( localList[detailID-1].priority );
       setLoaded(true);
     }
   }, [detailID]);
@@ -58,6 +48,8 @@ function Detail({ match }) {
       const newList = [...list];
       newList[detailID-1] = newListItem;
       setList(newList);
+      setSavedNote(text);
+      setSavedPriority(priority);
       setFeedbackMessage('Note updated');  
     },
     [list, detailID]
@@ -82,7 +74,8 @@ function Detail({ match }) {
         return; // exit if field empty
       }
 
-      if (existingNote===prevExistingNote && existingPriority===prevExistingPriority) {
+      //if (existingNote===prevExistingNote && existingPriority===prevExistingPriority) {
+      if (existingNote===savedNote && existingPriority===savedPriority) {
         setFeedbackMessage('No change has been made');
         return; // exit if field empty
       }
@@ -92,7 +85,7 @@ function Detail({ match }) {
       // notify user note was saved and go back to Homepage
 
     },
-    [existingNote, existingPriority, prevExistingNote, prevExistingPriority, editToDo]
+    [existingNote, existingPriority, savedNote, savedPriority, editToDo]
   );
 
   const handleTextAreaOnChange = useCallback(
