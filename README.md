@@ -9,7 +9,8 @@ I assume free-text notes can be multiple lines during input, so am attempting to
 Local Storage is on web-browser.
 
 ## To Do
-- Refactor List & Detail feedback messages so they update (live) before user clicks Add/Update
+- Refactor Detail feedback messages so they update (live) before user clicks Add/Update
+- Refactor List feedback message to include 'Note saved' confirmation message
 - Fade in/out form confirmation message text
 - Redirect to list view (homepage) after saving on edit
 - Fix CSS for Homepage so long notes are truncated with elipsis
