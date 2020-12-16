@@ -9,11 +9,12 @@ I assume free-text notes can be multiple lines during input, so am attempting to
 Local Storage is on web-browser.
 
 ## To Do
+- Refactor List & Detail feedback messages so they update (live) before user clicks Add/Update
 - Fade in/out form confirmation message text
 - Redirect to list view (homepage) after saving on edit
 - Fix CSS for Homepage so long notes are truncated with elipsis
 - Setup Eslint for code consistency and checking React-Hooks rules
-- Live search on content
+- Extra: Live search of notes by content
 - Implement prop-types or Typescript
 
 ## Available Scripts
