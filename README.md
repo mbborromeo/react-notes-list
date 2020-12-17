@@ -9,7 +9,6 @@ I assume free-text notes can be multiple lines during input, so am attempting to
 Local Storage is on web-browser.
 
 ## To Do
-- Refactor Detail as individual feedback messages when user clicks Update
 - List feedback message should maybe include 'Note saved' confirmation message
 - Consider live feedback message (before user clicks on Add/Update) instead of after
 - FADE IN/OUT form confirmation message text
