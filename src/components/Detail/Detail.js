@@ -60,6 +60,7 @@ function Detail({ match }) {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
+      setShowChangesSavedConfirmationMsg(false);
 
       if (!existingNote) {
         setShowContentValidationMsg(true);
@@ -117,18 +118,18 @@ function Detail({ match }) {
         <br />
         <div id="feedback">
           { showContentValidationMsg &&
-            <span>
+            <span className="error">
               Note must not be empty.
             </span>
           }
           { showNoChangesValidationMsg &&
-            <span>
+            <span className="error">
               No change has been made.
             </span>
           }
           {
             showChangesSavedConfirmationMsg &&
-            <span>
+            <span className="confirmation">
               Note updated.
             </span>
           }

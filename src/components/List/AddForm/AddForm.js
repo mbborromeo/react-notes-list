@@ -21,6 +21,7 @@ function AddForm({ addFunction }) {
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
+      setShowNoteAddedConfirmationMsg(false);
 
       if (!newItem) {        
         setShowContentValidationMsg(true);
@@ -81,17 +82,17 @@ function AddForm({ addFunction }) {
       <br />
       <div id="feedback">
         { showContentValidationMsg && // !newItem &&
-          <span>
+          <span className="error">
             Note must not be empty.&nbsp;
           </span>
         }
         { showPriorityValidationMsg && // !itemPriority &&
-          <span>
+          <span className="error">
             Priority must be selected.
           </span>
         }
         { showNoteAddedConfirmationMsg &&
-          <span>
+          <span className="confirmation">
             Note added.
           </span>
         }
