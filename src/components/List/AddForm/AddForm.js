@@ -8,6 +8,7 @@ function AddForm({ addFunction }) {
   const [itemPriority, setItemPriority] = useState('');
   const [showContentValidationMsg, setShowContentValidationMsg] = useState(false);
   const [showPriorityValidationMsg, setShowPriorityValidationMsg] = useState(false);
+  const [showNoteAddedConfirmationMsg, setShowNoteAddedConfirmationMsg] = useState(false);
 
   // add useCallback or useMemo...
   const resetFields = () => {
@@ -36,13 +37,15 @@ function AddForm({ addFunction }) {
       if(newItem && itemPriority){
         addFunction(newItem, itemPriority);
         resetFields();
+        setShowNoteAddedConfirmationMsg(true);
       }      
     },
     [newItem, itemPriority, addFunction]
   );
 
   const handleTextAreaOnChange = useCallback(
-    (e) => {      
+    (e) => {
+      setShowNoteAddedConfirmationMsg(false);
       setNewItem(e.target.value);
     },
     []
@@ -50,6 +53,7 @@ function AddForm({ addFunction }) {
 
   const handleSelectOnChange = useCallback(
     (e) => {
+      setShowNoteAddedConfirmationMsg(false);
       setItemPriority(e.target.value);
     },
     []
@@ -84,6 +88,11 @@ function AddForm({ addFunction }) {
         { showPriorityValidationMsg && // !itemPriority &&
           <span>
             Priority must be selected.
+          </span>
+        }
+        { showNoteAddedConfirmationMsg &&
+          <span>
+            Note added.
           </span>
         }
       </div>

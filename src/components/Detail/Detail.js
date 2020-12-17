@@ -1,5 +1,5 @@
 import React, {
-  useState, useEffect, useCallback //, useMemo, useRef
+  useState, useEffect, useCallback //, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
 import './Detail.css';
@@ -11,7 +11,6 @@ function Detail({ match }) {
   const [existingNote, setExistingNote] = useState('');
   const [existingPriority, setExistingPriority] = useState('');
   const [loaded, setLoaded] = useState(false);
-  //const [feedbackMessage, setFeedbackMessage] = useState('');
   const [showContentValidationMsg, setShowContentValidationMsg] = useState(false);
   const [showNoChangesValidationMsg, setShowNoChangesValidationMsg] = useState(false);
   const [showChangesSavedConfirmationMsg, setShowChangesSavedConfirmationMsg] = useState(false);
@@ -53,7 +52,6 @@ function Detail({ match }) {
       setList(newList);
       setSavedNote(text);
       setSavedPriority(priority);
-      //setFeedbackMessage('Note updated');
       setShowChangesSavedConfirmationMsg(true);
     },
     [list, detailID]
@@ -63,17 +61,13 @@ function Detail({ match }) {
     (e) => {
       e.preventDefault();
 
-      setShowChangesSavedConfirmationMsg(false);
-
       if (!existingNote) {
-        //setFeedbackMessage('Note must not be empty');
         setShowContentValidationMsg(true);
       } else {
         setShowContentValidationMsg(false);
       }
 
       if (existingNote && existingNote===savedNote && existingPriority===savedPriority) {
-        //setFeedbackMessage('No change has been made');
         setShowNoChangesValidationMsg(true);
       } else {
         setShowNoChangesValidationMsg(false);
@@ -91,6 +85,7 @@ function Detail({ match }) {
 
   const handleTextAreaOnChange = useCallback(
     (e) => {
+      setShowChangesSavedConfirmationMsg(false);
       setExistingNote(e.target.value)
     },
     []
@@ -98,6 +93,7 @@ function Detail({ match }) {
 
   const handleSelectOnChange = useCallback(
     (e) => {
+      setShowChangesSavedConfirmationMsg(false);
       setExistingPriority(e.target.value)
     },
     []
@@ -120,9 +116,6 @@ function Detail({ match }) {
 
         <br />
         <div id="feedback">
-          { 
-            //feedbackMessage 
-          }
           { showContentValidationMsg &&
             <span>
               Note must not be empty.
