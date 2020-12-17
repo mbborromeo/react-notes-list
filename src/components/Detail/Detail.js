@@ -11,7 +11,10 @@ function Detail({ match }) {
   const [existingNote, setExistingNote] = useState('');
   const [existingPriority, setExistingPriority] = useState('');
   const [loaded, setLoaded] = useState(false);
-  const [feedbackMessage, setFeedbackMessage] = useState('');
+  //const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [showContentValidationMsg, setShowContentValidationMsg] = useState(false);
+  const [showNoChangesValidationMsg, setShowNoChangesValidationMsg] = useState(false);
+  const [showChangesSavedConfirmationMsg, setShowChangesSavedConfirmationMsg] = useState(false);
   const detailID = parseInt(match.params.id);
   // Use useRef to get reference of previous state  
   // ie. https://reactjs.org/docs/hooks-faq.html#how-to-get-the-previous-props-or-state
@@ -50,7 +53,8 @@ function Detail({ match }) {
       setList(newList);
       setSavedNote(text);
       setSavedPriority(priority);
-      setFeedbackMessage('Note updated');  
+      //setFeedbackMessage('Note updated');
+      setShowChangesSavedConfirmationMsg(true);
     },
     [list, detailID]
   );
@@ -59,28 +63,25 @@ function Detail({ match }) {
     (e) => {
       e.preventDefault();
 
-      if (!existingNote && !existingPriority ) {
-        setFeedbackMessage('Note must not be empty and priority must be selected');
-        return; // exit if field empty
+      setShowChangesSavedConfirmationMsg(false);
+
+      if (!existingNote) {
+        //setFeedbackMessage('Note must not be empty');
+        setShowContentValidationMsg(true);
+      } else {
+        setShowContentValidationMsg(false);
       }
 
-      if (!existingNote && existingPriority ) {
-        setFeedbackMessage('Note must not be empty');
-        return; // exit if field empty
-      }
-
-      if (existingNote && !existingPriority ) {
-        setFeedbackMessage('Priority must be selected');
-        return; // exit if field empty
-      }
-
-      //if (existingNote===prevExistingNote && existingPriority===prevExistingPriority) {
-      if (existingNote===savedNote && existingPriority===savedPriority) {
-        setFeedbackMessage('No change has been made');
-        return; // exit if field empty
+      if (existingNote && existingNote===savedNote && existingPriority===savedPriority) {
+        //setFeedbackMessage('No change has been made');
+        setShowNoChangesValidationMsg(true);
+      } else {
+        setShowNoChangesValidationMsg(false);
       }
       
-      editToDo(existingNote, existingPriority);
+      if( existingNote && (existingNote!==savedNote || existingPriority!==savedPriority) ){
+        editToDo(existingNote, existingPriority);
+      }      
 
       // notify user note was saved and go back to Homepage
 
@@ -119,7 +120,25 @@ function Detail({ match }) {
 
         <br />
         <div id="feedback">
-          { feedbackMessage }
+          { 
+            //feedbackMessage 
+          }
+          { showContentValidationMsg &&
+            <span>
+              Note must not be empty.
+            </span>
+          }
+          { showNoChangesValidationMsg &&
+            <span>
+              No change has been made.
+            </span>
+          }
+          {
+            showChangesSavedConfirmationMsg &&
+            <span>
+              Note updated.
+            </span>
+          }
         </div>
 
         <br />
