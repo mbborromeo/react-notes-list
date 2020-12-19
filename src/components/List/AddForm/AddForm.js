@@ -12,10 +12,12 @@ function AddForm({ addFunction }) {
 
   // add useCallback or useMemo...
   const resetFields = () => {
-    setNewItem('');
-    setItemPriority('');
-    setShowContentValidationMsg(false);
-    setShowPriorityValidationMsg(false);
+    if( newItem || itemPriority ){
+      setNewItem('');
+      setItemPriority('');
+      setShowContentValidationMsg(false);
+      setShowPriorityValidationMsg(false);
+    }    
   }
 
   const handleSubmit = useCallback(

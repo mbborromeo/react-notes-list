@@ -9,7 +9,6 @@ I assume free-text notes can be multiple lines during input, so am attempting to
 Local Storage is on web-browser.
 
 ## To Do
-- AddForm add empty then clear incorrectly removed feedback messages
 - Consider live feedback message (before user clicks on Add/Update) instead of after
 - FADE IN/OUT form confirmation message text
 - REDIRECT to list view (homepage) after saving on edit
