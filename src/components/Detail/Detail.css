@@ -1,3 +1,7 @@
-#feedback {
+#feedback .error {
   color: red;
+}
+
+#feedback .confirmation {
+  color: green;
 }

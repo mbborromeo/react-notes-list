@@ -6,50 +6,58 @@ import '../../Detail/Detail.css';
 function AddForm({ addFunction }) {
   const [newItem, setNewItem] = useState('');
   const [itemPriority, setItemPriority] = useState('');
-  const [feedbackMessage, setFeedbackMessage] = useState('');
+  const [showContentValidationMsg, setShowContentValidationMsg] = useState(false);
+  const [showPriorityValidationMsg, setShowPriorityValidationMsg] = useState(false);
+  const [showNoteAddedConfirmationMsg, setShowNoteAddedConfirmationMsg] = useState(false);
 
   // add useCallback or useMemo...
   const resetFields = () => {
-    setNewItem('');
-    setItemPriority('');
-    setFeedbackMessage('');
+    if( newItem || itemPriority ){
+      setNewItem('');
+      setItemPriority('');
+      setShowContentValidationMsg(false);
+      setShowPriorityValidationMsg(false);
+    }    
   }
 
   const handleSubmit = useCallback(
     (e) => {
       e.preventDefault();
+      setShowNoteAddedConfirmationMsg(false);
 
-      if (!newItem && !itemPriority) {        
-        setFeedbackMessage('Note must not be empty and priority must be selected');
-        return; // exit if field empty
+      if (!newItem) {        
+        setShowContentValidationMsg(true);
+      } else {
+        setShowContentValidationMsg(false);
       }
 
-      if (!newItem && itemPriority) {        
-        setFeedbackMessage('Note must not be empty');
-        return; // exit if field empty
-      }
-
-      if (!itemPriority && newItem) {        
-        setFeedbackMessage('Priority must be selected');
-        return; // exit if field empty
+      if (!itemPriority) {        
+        setShowPriorityValidationMsg(true);
+      } else {
+        setShowPriorityValidationMsg(false);
       }
       
-      addFunction(newItem, itemPriority);
-      resetFields();
+      if(newItem && itemPriority){
+        addFunction(newItem, itemPriority);
+        resetFields();
+        setShowNoteAddedConfirmationMsg(true);
+      }      
     },
     [newItem, itemPriority, addFunction]
   );
 
   const handleTextAreaOnChange = useCallback(
     (e) => {
-      setNewItem(e.target.value)
+      setShowNoteAddedConfirmationMsg(false);
+      setNewItem(e.target.value);
     },
     []
   );
 
   const handleSelectOnChange = useCallback(
     (e) => {
-      setItemPriority(e.target.value)
+      setShowNoteAddedConfirmationMsg(false);
+      setItemPriority(e.target.value);
     },
     []
   );
@@ -75,7 +83,21 @@ function AddForm({ addFunction }) {
 
       <br />
       <div id="feedback">
-        { feedbackMessage }
+        { showContentValidationMsg && // !newItem &&
+          <span className="error">
+            Note must not be empty.&nbsp;
+          </span>
+        }
+        { showPriorityValidationMsg && // !itemPriority &&
+          <span className="error">
+            Priority must be selected.
+          </span>
+        }
+        { showNoteAddedConfirmationMsg &&
+          <span className="confirmation">
+            Note added.
+          </span>
+        }
       </div>
     </form>
   );
