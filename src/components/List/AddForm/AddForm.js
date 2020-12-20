@@ -1,73 +1,47 @@
 import React, { useState, useCallback } from 'react';
 import NoteTextArea from '../../Shared/NoteTextArea/NoteTextArea';
 import PriorityDropDown from '../../Shared/PriorityDropDown/PriorityDropDown';
+import { useForm } from "react-hook-form";
 import '../../Detail/Detail.css';
 
 function AddForm({ addFunction }) {
-  const [newItem, setNewItem] = useState('');
-  const [itemPriority, setItemPriority] = useState('');
-  const [showContentValidationMsg, setShowContentValidationMsg] = useState(false);
-  const [showPriorityValidationMsg, setShowPriorityValidationMsg] = useState(false);
-  const [showNoteAddedConfirmationMsg, setShowNoteAddedConfirmationMsg] = useState(false);
+  //const [showNoteAddedConfirmationMsg, setShowNoteAddedConfirmationMsg] = useState(false);
+
+  // https://react-hook-form.com/get-started
+  // https://react-hook-form.com/get-started#Integratinganexistingform
+  // Q - where does 'ref' come from?
+  const { register, handleSubmit, errors, watch, reset, getValues } = useForm();
+  const onActualSubmit = (data) => {
+    console.log('data to submit:', data)    
+    //addFunction( data.note, data.priority );
+    addFunction( getValues("note"), getValues("priority") );
+    resetFields();
+    /*
+    setShowNoteAddedConfirmationMsg(true);
+    */
+  };
+
+  console.log( 'Note is', watch("note") ) // watch input value by passing a name to it - defined in NoteTextArea.js
 
   // add useCallback or useMemo...
+  // https://react-hook-form.com/api#reset
   const resetFields = () => {
-    if( newItem || itemPriority ){
-      setNewItem('');
-      setItemPriority('');
-      setShowContentValidationMsg(false);
-      setShowPriorityValidationMsg(false);
+    if( getValues("note") || getValues("priority") ){
+      reset(
+        {
+          note: "",
+          priority: ""
+        }
+      );
     }    
   }
 
-  const handleSubmit = useCallback(
-    (e) => {
-      e.preventDefault();
-      setShowNoteAddedConfirmationMsg(false);
-
-      if (!newItem) {        
-        setShowContentValidationMsg(true);
-      } else {
-        setShowContentValidationMsg(false);
-      }
-
-      if (!itemPriority) {        
-        setShowPriorityValidationMsg(true);
-      } else {
-        setShowPriorityValidationMsg(false);
-      }
-      
-      if(newItem && itemPriority){
-        addFunction(newItem, itemPriority);
-        resetFields();
-        setShowNoteAddedConfirmationMsg(true);
-      }      
-    },
-    [newItem, itemPriority, addFunction]
-  );
-
-  const handleTextAreaOnChange = useCallback(
-    (e) => {
-      setShowNoteAddedConfirmationMsg(false);
-      setNewItem(e.target.value);
-    },
-    []
-  );
-
-  const handleSelectOnChange = useCallback(
-    (e) => {
-      setShowNoteAddedConfirmationMsg(false);
-      setItemPriority(e.target.value);
-    },
-    []
-  );
-
   return (
-    <form onSubmit={handleSubmit}>
-      <NoteTextArea value={ newItem } handleOnChange={ handleTextAreaOnChange } />
+    <form onSubmit={ handleSubmit(onActualSubmit) }>
+      <NoteTextArea label="note" register={ register } required />
       <br />
       
-      <PriorityDropDown value={ itemPriority } handleOnChange={ handleSelectOnChange } />
+      <PriorityDropDown label="priority" ref={ register({ required: true }) } />
       &nbsp;&nbsp;
 
       <button type="submit">Add</button>
@@ -77,26 +51,29 @@ function AddForm({ addFunction }) {
         type="button"
         value="Clear"
         onClick={() => {
-          resetFields();
+          resetFields();          
         }}
       />
 
       <br />
       <div id="feedback">
-        { showContentValidationMsg && // !newItem &&
+        { errors.note &&
           <span className="error">
             Note must not be empty.&nbsp;
           </span>
         }
-        { showPriorityValidationMsg && // !itemPriority &&
+
+        { errors.priority &&
           <span className="error">
             Priority must be selected.
           </span>
         }
-        { showNoteAddedConfirmationMsg &&
+
+        {/* showNoteAddedConfirmationMsg &&
           <span className="confirmation">
             Note added.
           </span>
+        */
         }
       </div>
     </form>

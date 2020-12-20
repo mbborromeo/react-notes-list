@@ -8,6 +8,7 @@
     "axios-jsonp-pro": "^1.1.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-hook-form": "^6.13.1",
     "react-router-dom": "^5.2.0"
   },
   "scripts": {

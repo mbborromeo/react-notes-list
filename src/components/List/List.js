@@ -11,23 +11,13 @@ function List() {
   const [list, setList] = useState( [] );
   const [filterConfig, setFilterConfig] = useState('all');
 
-  /*
-  const getArrayIndexOfItem = useCallback(
-    (id) => {
-      const isItemOfInterest = (element) => element.id === id;
-      return list.findIndex(isItemOfInterest);
-    },
-    [list]
-  );
-  */
-
   const deleteToDo = useCallback(
     (id) => {
       const editedList = [...list];
       editedList[id - 1].deleted = true;
       setList( editedList );
     },
-    [list] // dependencies that require a re-render for //, getArrayIndexOfItem
+    [list] // dependencies that require a re-render for
   );
 
   // Reference: https://www.danvega.dev/blog/2019/03/14/find-max-array-objects-javascript
