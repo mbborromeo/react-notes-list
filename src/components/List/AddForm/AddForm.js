@@ -5,13 +5,11 @@ import { useForm } from "react-hook-form";
 import '../../Detail/Detail.css';
 
 function AddForm({ addFunction }) {
-  // https://react-hook-form.com/get-started
   // https://react-hook-form.com/get-started#Integratinganexistingform
   // Q - where does 'ref' come from?
   const { register, handleSubmit, errors, watch, reset, getValues, formState } = useForm();
   
-  const onActualSubmit = (data) => {
-    // console.log('data to submit:', data)    
+  const onActualSubmit = (data) => {    
     addFunction( getValues("note"), getValues("priority") ); //addFunction( data.note, data.priority );
     resetFields();
   };
@@ -19,9 +17,8 @@ function AddForm({ addFunction }) {
   // Read the formState before render to subscribe the form state through Proxy
   const { isSubmitSuccessful } = formState;
 
-  // watch input value by passing a name to it - defined in NoteTextArea.js
-  // console.log( 'Note is', watch("note") ) 
-
+  // console.log('Note is', watch("note")) // watch input value by passing a name to it - defined in NoteTextArea.js
+  
   // add useCallback or useMemo...
   // https://react-hook-form.com/api#reset
   const resetFields = () => {
