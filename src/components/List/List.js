@@ -2,6 +2,7 @@ import React, {
   useState, useEffect, useCallback, useMemo
 } from 'react';
 import { Link } from 'react-router-dom';
+import { useForm } from "react-hook-form";
 import AddForm from './AddForm/AddForm';
 import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 import './List.css';
@@ -10,6 +11,7 @@ import './List.css';
 function List() {
   const [list, setList] = useState( [] );
   const [filterConfig, setFilterConfig] = useState('all');
+  const { register, getValues } = useForm();
 
   const deleteToDo = useCallback(
     (id) => {
@@ -80,7 +82,8 @@ function List() {
 
   const handleSelectOnChange = useCallback(
     (e) => {
-      setFilterConfig(e.target.value)
+      //setFilterConfig(e.target.value)
+      setFilterConfig( getValues("priorityFilter") )
     },
     []
   );
@@ -103,7 +106,17 @@ function List() {
               <th className="width-quarter">
                 Priority&nbsp;
                 
-                <PriorityDropDown view="list" value={ filterConfig } handleOnChange={ handleSelectOnChange } />
+                {/* <PriorityDropDown 
+                  view="list" 
+                  value={ filterConfig } 
+                  handleOnChange={ handleSelectOnChange } 
+                /> */}
+                <PriorityDropDown 
+                  view="list" 
+                  label="priorityFilter" 
+                  ref={ register } 
+                  handleOnChange={ handleSelectOnChange } 
+                />
               </th>
               <th className="width-quarter">
                 Actions                

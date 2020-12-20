@@ -1,12 +1,11 @@
 import React, { forwardRef } from 'react';
 
 //function PriorityDropDown({ value, handleOnChange, view}){
-const PriorityDropDown = forwardRef( ({ label, view }, ref) => (
+const PriorityDropDown = forwardRef( ({ label, view, handleOnChange }, ref) => (
   <select 
     name={ label } 
     id={ label }
-    // value={ value }
-    // onChange={ handleOnChange }
+    onChange={ handleOnChange } // still need onChange for List.js
     ref={ ref }
   >
     { view==="list" ?
