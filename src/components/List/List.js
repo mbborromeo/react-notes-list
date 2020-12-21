@@ -85,7 +85,7 @@ function List() {
       //setFilterConfig(e.target.value)
       setFilterConfig( getValues("priorityFilter") )
     },
-    []
+    [getValues]
   );
   
   // possibly use useMemo here, and/or define a function for sort
@@ -106,11 +106,6 @@ function List() {
               <th className="width-quarter">
                 Priority&nbsp;
                 
-                {/* <PriorityDropDown 
-                  view="list" 
-                  value={ filterConfig } 
-                  handleOnChange={ handleSelectOnChange } 
-                /> */}
                 <PriorityDropDown 
                   view="list" 
                   label="priorityFilter" 
