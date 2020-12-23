@@ -42,7 +42,7 @@ function AddForm({ addFunction }) {
 
   return (
     <form onSubmit={ handleSubmit(onActualSubmit) }>
-      <NoteTextArea label="note" register={ register } required />
+      <NoteTextArea label="note" ref={ register({ required: true }) } />
       <br />
       
       <PriorityDropDown label="priority" ref={ register({ required: true }) } />

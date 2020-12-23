@@ -13,28 +13,24 @@ function Detail({ match }) {
   // Note to self:  removed state for savedNote and savedPriority 
   // because react-hook-form input elements have own internal state 
   // and I can use formState to determine if input fields are 'dirty' (have been changed).
-  const [showNoChangesValidationMsg, setShowNoChangesValidationMsg] = useState(false);
-  const [showChangesSavedConfirmationMsg, setShowChangesSavedConfirmationMsg] = useState(false);  
-  const detailID = parseInt(match.params.id);  
+   
+  const detailID = parseInt(match.params.id);
+  const currentItem = list[detailID - 1];
 
   const { 
     register, 
     handleSubmit, 
     errors, 
-    //setValue,
-    getValues,
+    setError,
     reset, 
     formState 
-    //, watch
   } = useForm();
 
-  const { isDirty, dirtyFields, isSubmitSuccessful } = formState; 
-  console.log('isDirty', isDirty)
-  console.log('dirtyFields', dirtyFields)
-  console.log('**** list ****', list)
-
-  // const watchNoteEdit = watch("noteEdit");
-  // const watchPriorityEdit = watch("priorityEdit");
+  const { isDirty, dirtyFields, isSubmitSuccessful, submitCount } = formState; 
+  console.log('------------------------------------');
+  console.log('isDirty', isDirty, dirtyFields)
+  console.log('errors', errors)
+  console.log('isSubmitSuccessful', isSubmitSuccessful, submitCount)
 
   useEffect(() => {
     const localList = JSON.parse( localStorage.getItem('localList') );
@@ -78,134 +74,80 @@ function Detail({ match }) {
           priorityEdit: priority
         }
       );
-
-      setShowChangesSavedConfirmationMsg(true);
     },
     [list, detailID, reset]
   );
-
-  /*
-  const checkHasChanged = useCallback(
-    () => {      
-      //if( watchNoteEdit && (watchNoteEdit!==savedNote || watchPriorityEdit!==savedPriority) ){
-      if( existingNote && (existingNote!==savedNote || existingPriority!==savedPriority) ){ 
-        setShowNoChangesValidationMsg(false);
-        console.log("changed occured")
-        return true;        
-      } else {          
-        setShowNoChangesValidationMsg(true);
-        console.log("existing different from saved note/priority!")
-        return false;
-      }
-    },
-    [existingNote, existingPriority, savedNote, savedPriority]
-  );
-  */
   
   const onActualSubmit = useCallback(
-    (data) => {
-      setShowChangesSavedConfirmationMsg(false); 
-
-      if( isDirty ){ // checkHasChanged
-        setShowNoChangesValidationMsg(false);
-        
-        //editToDo(watchNoteEdit, watchPriorityEdit);
-        editToDo( getValues("noteEdit"), getValues("priorityEdit") );
-      } else {
-        setShowNoChangesValidationMsg(true);
+    ({ noteEdit, priorityEdit }) => {
+      // if no change
+      if (currentItem.content === noteEdit && currentItem.priority === priorityEdit) {
+        setError("noteEdit", {
+          message: "No change has been made."
+        });
+        return;
       }
+      editToDo( noteEdit, priorityEdit );
     },
-    [getValues, editToDo, isDirty]
-  );
-  
-  const handleTextAreaOnChange = useCallback(
-    (e) => {
-      setShowChangesSavedConfirmationMsg(false);
-
-      //checkHasChanged();
-      if( isDirty ){
-        setShowNoChangesValidationMsg(false);
-      } else {
-        setShowNoChangesValidationMsg(true);
-      }
-    },
-    [isDirty]
+    [editToDo, currentItem, setError]
   );
 
-  const handleSelectOnChange = useCallback(
-    (e) => {
-      setShowChangesSavedConfirmationMsg(false);
+  if (!loaded) {
+    return <div>Loading...</div>;
+  }
 
-      //checkHasChanged();
-      if( isDirty ){
-        console.log('isDirty setting showNoChangesValidationMsg to false')
-        setShowNoChangesValidationMsg(false);
-      } else {
-        console.log('isDirty setting showNoChangesValidationMsg to true')
-        setShowNoChangesValidationMsg(true);
-      }
-    },
-    [isDirty]
-  );
-
-  if (loaded && list.length > 0) {
-    return (
-      <div>
-        <h3>Note - ID { detailID }</h3>
-
-        <form onSubmit={ handleSubmit(onActualSubmit) }>
-          <NoteTextArea 
-            view="detail" 
-            label="noteEdit" 
-            register={ register } 
-            required
-            handleOnChange={ handleTextAreaOnChange }
-          />
-          <br /><br />          
-          
-          <PriorityDropDown 
-            label="priorityEdit" 
-            ref={ register({ required: true }) }
-            handleOnChange={ handleSelectOnChange }
-          />
-          <br /><br />
-
-          <button type="submit">Update</button>
-        </form>
-
-        <br />
-        <div id="feedback">
-          { errors.noteEdit &&
-            <span className="error">
-              Note must not be empty.
-            </span>
-          }
-          { showNoChangesValidationMsg && !isDirty && 
-            <span className="error">
-              No change has been made.
-            </span>
-          }
-          { showChangesSavedConfirmationMsg &&
-            <span className="confirmation">
-              Note updated.
-            </span>
-          }
-        </div>
-
-        <br />
-        <br />
-        <Link
-          to="/"
-          className="button back"
-        >
-          &lt; Back
-        </Link>
-      </div>
-    );
-  } if (loaded && list.length === 0) {
+  if (list.length === 0) {
     return <div>No detail to display</div>;
   }
-  return <div>Loading...</div>;
+  
+  return (
+    <div>
+      <h3>Note - ID { detailID }</h3>
+
+      <form onSubmit={ handleSubmit(onActualSubmit) }>
+        <NoteTextArea 
+          view="detail" 
+          label="noteEdit" 
+          // register={ register } 
+          // required
+          ref={ register({ required: 'Note must not be empty.' }) }          
+        />
+        <br /><br />          
+        
+        <PriorityDropDown 
+          label="priorityEdit" 
+          ref={ register({ required: 'Priority must be selected.' }) } // required: true
+        />
+        <br /><br />
+
+        <button type="submit">Update</button>
+      </form>
+
+      <br />
+      <div id="feedback">
+        { errors.noteEdit &&
+          <span className="error">{ errors.noteEdit.message }</span>
+        }
+        { errors.priorityEdit &&
+          <span className="error">{errors.priorityEdit.message}</span>
+        }
+        { isSubmitSuccessful && !isDirty &&
+          <span className="confirmation">
+            Note updated.
+          </span>
+        }
+      </div>
+
+      <br />
+      <br />
+      <Link
+        to="/"
+        className="button back"
+      >
+        &lt; Back
+      </Link>
+    </div>
+  );
 }
 
 export default Detail;
