@@ -10,10 +10,7 @@ import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 function Detail({ match }) {  
   const [list, setList] = useState( [] );
   const [loaded, setLoaded] = useState(false);
-  // Note to self:  removed state for savedNote and savedPriority 
-  // because react-hook-form input elements have own internal state 
-  // and I can use formState to determine if input fields are 'dirty' (have been changed).
-   
+
   const detailID = parseInt(match.params.id);
   const currentItem = list[detailID - 1];
 
@@ -80,7 +77,6 @@ function Detail({ match }) {
   
   const onActualSubmit = useCallback(
     ({ noteEdit, priorityEdit }) => {
-      // if no change
       if (currentItem.content === noteEdit && currentItem.priority === priorityEdit) {
         setError("noteEdit", {
           message: "No change has been made."
