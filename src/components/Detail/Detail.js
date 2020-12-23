@@ -10,16 +10,11 @@ import PriorityDropDown from '../Shared/PriorityDropDown/PriorityDropDown';
 function Detail({ match }) {  
   const [list, setList] = useState( [] );
   const [loaded, setLoaded] = useState(false);
-  const [existingNote, setExistingNote] = useState('');
-  const [existingPriority, setExistingPriority] = useState('');
-  // Use useRef to get reference of previous state  
-  // ie. https://reactjs.org/docs/hooks-faq.html#how-to-get-the-previous-props-or-state
-  // or manually created a previous 'saved' value state for note and priority
-  // const [savedNote, setSavedNote] = useState('');
-  // const [savedPriority, setSavedPriority] = useState('');
+  // Note to self:  removed state for savedNote and savedPriority 
+  // because react-hook-form input elements have own internal state 
+  // and I can use formState to determine if input fields are 'dirty' (have been changed).
   const [showNoChangesValidationMsg, setShowNoChangesValidationMsg] = useState(false);
-  const [showChangesSavedConfirmationMsg, setShowChangesSavedConfirmationMsg] = useState(false);
-  
+  const [showChangesSavedConfirmationMsg, setShowChangesSavedConfirmationMsg] = useState(false);  
   const detailID = parseInt(match.params.id);  
 
   const { 
@@ -36,6 +31,7 @@ function Detail({ match }) {
   const { isDirty, dirtyFields, isSubmitSuccessful } = formState; 
   console.log('isDirty', isDirty)
   console.log('dirtyFields', dirtyFields)
+  console.log('**** list ****', list)
 
   // const watchNoteEdit = watch("noteEdit");
   // const watchPriorityEdit = watch("priorityEdit");
@@ -45,10 +41,6 @@ function Detail({ match }) {
 
     if (localList && localList[detailID-1]) {
       setList( localList );
-      setExistingNote( localList[detailID-1].content );
-      setExistingPriority( localList[detailID-1].priority );
-      // setSavedNote( localList[detailID-1].content );
-      // setSavedPriority( localList[detailID-1].priority );
       
       // set form field values to localStorage. setValue() not working so used reset()
       reset(
@@ -78,8 +70,8 @@ function Detail({ match }) {
       const newList = [...list];
       newList[detailID-1] = newListItem;
       setList(newList);
-      // setSavedNote(text);
-      // setSavedPriority(priority);
+
+      // set form field values to new values, so 'isDirty' will compare to latest values 
       reset(
         {
           noteEdit: text,
@@ -89,7 +81,7 @@ function Detail({ match }) {
 
       setShowChangesSavedConfirmationMsg(true);
     },
-    [list, detailID]
+    [list, detailID, reset]
   );
 
   /*
@@ -116,20 +108,19 @@ function Detail({ match }) {
 
       if( isDirty ){ // checkHasChanged
         setShowNoChangesValidationMsg(false);
-
-        editToDo(existingNote, existingPriority);
+        
         //editToDo(watchNoteEdit, watchPriorityEdit);
+        editToDo( getValues("noteEdit"), getValues("priorityEdit") );
       } else {
         setShowNoChangesValidationMsg(true);
       }
     },
-    [existingNote, existingPriority, editToDo, isDirty]
+    [getValues, editToDo, isDirty]
   );
   
   const handleTextAreaOnChange = useCallback(
     (e) => {
       setShowChangesSavedConfirmationMsg(false);
-      setExistingNote( getValues("noteEdit") );
 
       //checkHasChanged();
       if( isDirty ){
@@ -138,14 +129,12 @@ function Detail({ match }) {
         setShowNoChangesValidationMsg(true);
       }
     },
-    [getValues, isDirty]
+    [isDirty]
   );
 
   const handleSelectOnChange = useCallback(
     (e) => {
-      console.log('handleSelectOnChange!!!')
       setShowChangesSavedConfirmationMsg(false);
-      setExistingPriority( getValues("priorityEdit") );
 
       //checkHasChanged();
       if( isDirty ){
@@ -156,7 +145,7 @@ function Detail({ match }) {
         setShowNoChangesValidationMsg(true);
       }
     },
-    [getValues, isDirty]
+    [isDirty]
   );
 
   if (loaded && list.length > 0) {
