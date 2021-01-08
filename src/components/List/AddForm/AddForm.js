@@ -6,12 +6,11 @@ import '../../Detail/Detail.css';
 
 function AddForm({ addFunction }) {
   // https://react-hook-form.com/get-started#Integratinganexistingform
-  // Q - where does 'ref' come from?
   const { 
     register, 
     handleSubmit, 
     errors, 
-    watch, 
+    //watch, 
     reset, 
     getValues, 
     formState  
