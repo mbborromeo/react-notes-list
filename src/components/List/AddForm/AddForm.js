@@ -10,7 +10,6 @@ function AddForm({ addFunction }) {
     register, 
     handleSubmit, 
     errors, 
-    //watch, 
     reset, 
     getValues, 
     formState  
@@ -19,8 +18,6 @@ function AddForm({ addFunction }) {
   // Read the formState before render to subscribe the form state through Proxy  
   const { isSubmitSuccessful } = formState; 
 
-  // console.log('Note is', watch("note")) // watch input value by passing a name to it - defined in NoteTextArea.js
-  
   const onActualSubmit = (data) => {    
     addFunction( getValues("note"), getValues("priority") ); //addFunction( data.note, data.priority );
     resetFields();
